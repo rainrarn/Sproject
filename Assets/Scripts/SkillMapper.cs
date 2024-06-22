@@ -20,7 +20,7 @@ public class DefenceSkill
     public float BaseDamaged { get; set; }
     public float DamageMultiSkillLevelName { get; set; }
 
-    public List<string> AttackSkillNameList { get; set; }
+    public List<string> DefenceSkillNameList { get; set; }
 }
 public class UtillSkill
 {
@@ -30,5 +30,5 @@ public class UtillSkill
     public float BaseDamaged { get; set; }
     public float DamageMultiSkillLevelName { get; set; }
 
-    public List<string> AttackSkillNameList { get; set; }
+    public List<string> UtillSkillNameList { get; set; }
 }

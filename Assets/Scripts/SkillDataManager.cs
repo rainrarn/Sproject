@@ -60,4 +60,85 @@ public class SkillDataManager : MonoBehaviour
         
     }
 
+    private void ReadDefenceSkillTable(string tableName)
+    {
+        LoadedDefenceSkillList = new Dictionary<string, DefenceSkill>();
+
+        XDocument doc = XDocument.Load($"{_dataRootPath}/{tableName}.xml");
+        var dataElements = doc.Descendants("data");
+
+        foreach (var data in dataElements)
+        {
+            var tempDefence = new DefenceSkill();
+            tempDefence.SkillName = data.Attribute("DataName").Value;
+            tempDefence.Name = data.Attribute(nameof(tempDefence.Name)).Value;
+            tempDefence.Description = data.Attribute(nameof(tempDefence.Description)).Value;
+            tempDefence.BaseDamaged = float.Parse(data.Attribute(nameof(tempDefence.BaseDamaged)).Value);
+            tempDefence.DamageMultiSkillLevelName = float.Parse(data.Attribute(nameof(tempDefence.DamageMultiSkillLevelName)).Value);
+
+            string defenceSkillNameListStr = data.Attribute(nameof(tempDefence.DefenceSkillNameList)).Value;
+            if (!string.IsNullOrEmpty(defenceSkillNameListStr))
+            {
+                defenceSkillNameListStr = defenceSkillNameListStr.Replace("{", string.Empty);
+                defenceSkillNameListStr = defenceSkillNameListStr.Replace("}", string.Empty);
+
+                var names = defenceSkillNameListStr.Split(',');
+
+                var list = new List<string>();
+                if (names.Length > 0)
+                {
+                    foreach (var name in names)
+                    {
+                        list.Add(name);
+                    }
+                    tempDefence.DefenceSkillNameList = list;
+                }
+                LoadedDefenceSkillList.Add(tempDefence.SkillName, tempDefence);
+            }
+
+        }
+
+
+    }
+
+    private void ReadUtillSkillTable(string tableName)
+    {
+        LoadedUtillSkillList = new Dictionary<string, UtillSkill>();
+
+        XDocument doc = XDocument.Load($"{_dataRootPath}/{tableName}.xml");
+        var dataElements = doc.Descendants("data");
+
+        foreach (var data in dataElements)
+        {
+            var tempUtill = new UtillSkill();
+            tempUtill.SkillName = data.Attribute("DataName").Value;
+            tempUtill.Name = data.Attribute(nameof(tempUtill.Name)).Value;
+            tempUtill.Description = data.Attribute(nameof(tempUtill.Description)).Value;
+            tempUtill.BaseDamaged = float.Parse(data.Attribute(nameof(tempUtill.BaseDamaged)).Value);
+            tempUtill.DamageMultiSkillLevelName = float.Parse(data.Attribute(nameof(tempUtill.DamageMultiSkillLevelName)).Value);
+
+            string utillSkillNameListStr = data.Attribute(nameof(tempUtill.UtillSkillNameList)).Value;
+            if (!string.IsNullOrEmpty(utillSkillNameListStr))
+            {
+                utillSkillNameListStr = utillSkillNameListStr.Replace("{", string.Empty);
+                utillSkillNameListStr = utillSkillNameListStr.Replace("}", string.Empty);
+
+                var names = utillSkillNameListStr.Split(',');
+
+                var list = new List<string>();
+                if (names.Length > 0)
+                {
+                    foreach (var name in names)
+                    {
+                        list.Add(name);
+                    }
+                    tempUtill.UtillSkillNameList = list;
+                }
+                LoadedUtillSkillList.Add(tempUtill.SkillName, tempUtill);
+            }
+
+        }
+
+
+    }
 }
