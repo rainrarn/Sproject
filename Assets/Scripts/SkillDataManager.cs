@@ -16,7 +16,30 @@ public class SkillDataManager : MonoBehaviour
     private void Awake()
     {
         Inst = this;
+        ReadAllDataOnAwake();
+    }
 
+    private void ReadAllDataOnAwake()
+    {
+        ReadData(nameof(AttackSkill));
+        ReadData(nameof(DefenceSkill));
+        ReadData(nameof(UtillSkill));
+    }
+
+    private void ReadData(string tableName)
+    {
+        switch (tableName)
+        {
+            case "AttackSkill":
+                ReadAttackSkillTable(tableName);
+                break;
+            case "DefenceSkill":
+                ReadDefenceSkillTable(tableName);
+                break;
+            case "UtillSkill":
+                ReadUtillSkillTable(tableName);
+                break;
+        }
     }
 
     private void ReadAttackSkillTable(string tableName)
