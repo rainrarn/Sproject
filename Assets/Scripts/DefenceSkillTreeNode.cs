@@ -2,17 +2,41 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DefenceSkillTreeNode : MonoBehaviour
+
+public class DefenceSkillNode
 {
-    // Start is called before the first frame update
-    void Start()
+    public string skillName; // 스킬 이름
+    public int skillLevel; // 스킬 레벨 (기본값은 0)
+    public List<DefenceSkillNode> prerequisites; // 선행 스킬 목록
+    public bool isUnlocked; // 스킬 잠금 해제 여부
+
+    public DefenceSkillNode(string name)
     {
-        
+        skillName = name;
+        skillLevel = 0;
+        prerequisites = new List<DefenceSkillNode>();
+        isUnlocked = false;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void Unlock()
     {
-        
+        isUnlocked = true;
+    }
+
+    public void LevelUp()
+    {
+        if (skillLevel < 3)
+        {
+            skillLevel++;
+            Debug.Log(skillName + " leveled up to " + skillLevel);
+
+            if (skillLevel == 3)
+            {
+                Unlock();
+                Debug.Log(skillName + " is fully leveled up and unlocked!");
+            }
+        }
     }
 }
+
+
