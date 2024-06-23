@@ -54,4 +54,8 @@ public class AttackSkillTree : MonoBehaviour
             Debug.Log(skill.skillName + " cannot be leveled up yet.");
         }
     }
+    public void LevelDownSkill(AttackSkillNode skill)
+    {
+        skill.LevelDown(); // 스킬 레벨 다운
+    }
 }

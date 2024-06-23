@@ -37,6 +37,14 @@ public class DefenceSkillNode
             }
         }
     }
+    public void LevelDown()
+    {
+        if (skillLevel > 0)
+        {
+            skillLevel--;
+            Debug.Log(skillName + " leveled down to " + skillLevel);
+        }
+    }
 }
 
 

@@ -55,4 +55,8 @@ public class UtillSkillTree : MonoBehaviour
             Debug.Log(skill.skillName + " cannot be leveled up yet.");
         }
     }
+    public void LevelDownSkill(UtillSkillTreeNode skill)
+    {
+        skill.LevelDown(); // 스킬 레벨 다운
+    }
 }
