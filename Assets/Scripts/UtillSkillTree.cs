@@ -16,11 +16,20 @@ public class UtillSkillTree : MonoBehaviour
         UtillSkillTreeNode skillA = new UtillSkillTreeNode("Skill A");
         UtillSkillTreeNode skillB = new UtillSkillTreeNode("Skill B");
         UtillSkillTreeNode skillC = new UtillSkillTreeNode("Skill C");
+        UtillSkillTreeNode skillD = new UtillSkillTreeNode("Skill D");
+        UtillSkillTreeNode skillE = new UtillSkillTreeNode("Skill E");
+        UtillSkillTreeNode skillF = new UtillSkillTreeNode("Skill F");
+        UtillSkillTreeNode skillG = new UtillSkillTreeNode("Skill G");
+        UtillSkillTreeNode skillH = new UtillSkillTreeNode("Skill H");
 
         skillB.prerequisites.Add(skillA); // Skill B는 Skill A를 선행 스킬로 가짐
-        skillC.prerequisites.Add(skillB); // Skill C는 Skill B를 선행 스킬로 가짐
+        skillC.prerequisites.Add(skillA);
+        skillD.prerequisites.Add(skillB);
+        skillE.prerequisites.Add(skillB);
+        skillF.prerequisites.Add(skillC);
+        skillG.prerequisites.Add(skillC);
 
-        allSkills = new List<UtillSkillTreeNode> { skillA, skillB, skillC };
+        allSkills = new List<UtillSkillTreeNode> { skillA, skillB, skillC, skillD, skillE, skillF, skillG, skillH };
     }
 
     public bool CanLevelUp(UtillSkillTreeNode skill)
