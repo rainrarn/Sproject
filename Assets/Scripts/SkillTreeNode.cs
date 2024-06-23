@@ -18,7 +18,25 @@ public class SkillNode
         isUnlocked = false;
     }
 
+    public void Unlock()
+    {
+        isUnlocked = true;
+    }
 
+    public void LevelUp()
+    {
+        if (skillLevel < 3)
+        {
+            skillLevel++;
+            Debug.Log(skillName + " leveled up to " + skillLevel);
+
+            if (skillLevel == 3)
+            {
+                Unlock();
+                Debug.Log(skillName + " is fully leveled up and unlocked!");
+            }
+        }
+    }
 }
 
 
