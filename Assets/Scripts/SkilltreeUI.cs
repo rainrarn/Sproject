@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 public class SkillTreeUI : MonoBehaviour
 {
-    public SkillTree skillTree;
+    public AttackSkillTree skillTree;
     public GameObject skillButtonPrefab;
     public GameObject incrementButtonPrefab;
     public GameObject decrementButtonPrefab;
