@@ -13,14 +13,14 @@ public class DefenceSkillTree : MonoBehaviour
 
     void InitializeSkillTree()
     {
-        DefenceSkillNode skillA = new DefenceSkillNode("Skill A");
-        DefenceSkillNode skillB = new DefenceSkillNode("Skill B");
-        DefenceSkillNode skillC = new DefenceSkillNode("Skill C");
-        DefenceSkillNode skillD = new DefenceSkillNode("Skill D");
-        DefenceSkillNode skillE = new DefenceSkillNode("Skill E");
-        DefenceSkillNode skillF = new DefenceSkillNode("Skill F");
-        DefenceSkillNode skillG = new DefenceSkillNode("Skill G");
-        DefenceSkillNode skillH = new DefenceSkillNode("Skill H");
+        DefenceSkillNode skillA = new DefenceSkillNode("Patience");
+        DefenceSkillNode skillB = new DefenceSkillNode("Endurance");
+        DefenceSkillNode skillC = new DefenceSkillNode("Protect");
+        DefenceSkillNode skillD = new DefenceSkillNode("Persistent");
+        DefenceSkillNode skillE = new DefenceSkillNode("Toughness");
+        DefenceSkillNode skillF = new DefenceSkillNode("Dodge");
+        DefenceSkillNode skillG = new DefenceSkillNode("Castle");
+        DefenceSkillNode skillH = new DefenceSkillNode("Impregnable");
 
         skillB.prerequisites.Add(skillA); // Skill B는 Skill A를 선행 스킬로 가짐
         skillC.prerequisites.Add(skillA);
@@ -29,11 +29,28 @@ public class DefenceSkillTree : MonoBehaviour
         skillF.prerequisites.Add(skillC);
         skillG.prerequisites.Add(skillC);
 
+        // Skill H는 Skill D, E, F, G 중 하나라도 잠금 해제되면 열림
+        skillH.prerequisites.Add(skillD);
+        skillH.prerequisites.Add(skillE);
+        skillH.prerequisites.Add(skillF);
+        skillH.prerequisites.Add(skillG);
+
         allSkills = new List<DefenceSkillNode> { skillA, skillB, skillC, skillD, skillE, skillF, skillG, skillH };
     }
 
     public bool CanLevelUp(DefenceSkillNode skill)
     {
+        if (skill.skillName == "Impregnable")
+        {
+            foreach (var prerequisite in skill.prerequisites)
+            {
+                if (prerequisite.isUnlocked)
+                {
+                    return true; // Skill H는 D, E, F, G 중 하나라도 잠금 해제되면 true 반환
+                }
+            }
+            return false;
+        }
         foreach (var prerequisite in skill.prerequisites)
         {
             if (!prerequisite.isUnlocked)

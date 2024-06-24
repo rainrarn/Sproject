@@ -1,10 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-public class DefenceSkillTreeUI : MonoBehaviour
+
+public class AttackSkillTreeUI : MonoBehaviour
 {
-    public DefenceSkillTree skillTree;
+    public AttackSkillTree skillTree;
     public GameObject skillButtonPrefab;
     public GameObject incrementButtonPrefab;
     public GameObject decrementButtonPrefab;
@@ -18,7 +17,7 @@ public class DefenceSkillTreeUI : MonoBehaviour
     // 스킬 버튼들을 생성하는 메서드입니다.
     void CreateSkillButtons()
     {
-        // 모든 스킬을 순회하면서 버튼을 생성합니다.
+        // 모든 스킬을 순회하면서 버튼을 생성 합니다.
         foreach (var skill in skillTree.allSkills)
         {
             // 스킬 버튼 인스턴스를 생성합니다.
@@ -54,3 +53,4 @@ public class DefenceSkillTreeUI : MonoBehaviour
         decrementButton.GetComponent<Button>().onClick.AddListener(() => skillTree.LevelDownSkill(skill));
     }
 }
+

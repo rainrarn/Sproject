@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-public class UtillSkillTreeUI : MonoBehaviour
+public class DefenceSkillTreeUI : MonoBehaviour
 {
-    public UtillSkillTree skillTree;
+    public DefenceSkillTree skillTree;
     public GameObject skillButtonPrefab;
     public GameObject incrementButtonPrefab;
     public GameObject decrementButtonPrefab;
@@ -33,7 +33,7 @@ public class UtillSkillTreeUI : MonoBehaviour
     }
 
     // 스킬 버튼을 클릭했을 때 호출되는 메서드입니다.
-    void OnSkillButtonClicked(AttackSkillNode skill, GameObject skillButton)
+    void OnSkillButtonClicked(DefenceSkillNode skill, GameObject skillButton)
     {
         // 레벨 증가 버튼을 스킬 버튼 아래에 생성합니다.
         GameObject incrementButton = Instantiate(incrementButtonPrefab, skillButton.transform);
