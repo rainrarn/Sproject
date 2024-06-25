@@ -28,6 +28,8 @@ public class PlayerStatManager : MonoBehaviour
     public float _critical;
     public int skillpoints;
 
+    public int _healingpotion;
+    public int _potionheal;
     [SerializeField] Slider _hpBar;
     [SerializeField] Slider _staminaBar;
     [SerializeField] Slider _mpBar;
@@ -56,6 +58,7 @@ public class PlayerStatManager : MonoBehaviour
 
         _mpBar.maxValue = _maxMp;
         _mpBar.value = _mp;
+        _healingpotion = 5;
 
         ManaCristal1.SetActive(false);
         ManaCristal2.SetActive(false);
@@ -219,4 +222,17 @@ public class PlayerStatManager : MonoBehaviour
         _mp += mp;
     }
 
+    public void UsePotion()
+    {
+        if (_healingpotion > 0)
+        {
+            _healingpotion--;
+            _hp += _potionheal;
+        }
+
+        if(_hp>_maxHp)
+        {
+            _hp = _maxHp;
+        }
+    }
 }
