@@ -32,6 +32,7 @@ public class PlayerStatManager : MonoBehaviour
     [SerializeField] Slider _staminaBar;
     [SerializeField] Slider _mpBar;
 
+    [SerializeField] GameObject StatusInfo;
 
     private void Awake()
     {
@@ -100,10 +101,28 @@ public class PlayerStatManager : MonoBehaviour
             GetManaCristal();
         }
 
+        if(Input.GetKeyDown(KeyCode.Tab))
+        {
+            StatusInfo.SetActive(true);
+        }
+        if (Input.GetKeyUp(KeyCode.Tab))
+        {
+            StatusInfo.SetActive(false);
+        }
+
+        
+
+
         _hpBar.value = _hp;
         _mpBar.value = _mp;
         _staminaBar.value = _stamina;
+
+
+
     }
+
+
+
     public void PlayerAtkUp(int atk)
     {
         _atk += atk;

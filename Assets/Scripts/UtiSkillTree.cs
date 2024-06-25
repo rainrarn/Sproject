@@ -48,7 +48,7 @@ public class UtiSkillTree : MonoBehaviour
     }
     public void OnClick_skillA()
     {
-        if (isClickedA && PlayerStatManager.instance.skillpoints > 0)
+        if (isClickedA && PlayerStatManager.instance.skillpoints > 0 && isSkillAUP == false)
         {
             isSkillAUP = true;
             //PlayerStatManager.instance.PlayerAtkUp(1);
@@ -66,7 +66,7 @@ public class UtiSkillTree : MonoBehaviour
     }
     public void OnClick_skillB()
     {
-        if (isClickedB && isSkillAUP == true && PlayerStatManager.instance.skillpoints > 0)
+        if (isClickedB && isSkillAUP == true && PlayerStatManager.instance.skillpoints > 0 && isSkillBUP == false)
         {
             isSkillBUP = true;
             //PlayerStatManager.instance.PlayerCritical(10);
@@ -84,7 +84,7 @@ public class UtiSkillTree : MonoBehaviour
     }
     public void OnClick_skillC()
     {
-        if (isClickedC && isSkillAUP == true && PlayerStatManager.instance.skillpoints > 0)
+        if (isClickedC && isSkillAUP == true && PlayerStatManager.instance.skillpoints > 0 && isSkillCUP == false)
         {
             isSkillCUP = true;
             //PlayerStatManager.instance.PlayerCritical(10);
@@ -102,7 +102,7 @@ public class UtiSkillTree : MonoBehaviour
     }
     public void OnClick_skillD()
     {
-        if (isClickedD && isSkillBUP == true && PlayerStatManager.instance.skillpoints > 0)
+        if (isClickedD && isSkillBUP == true && PlayerStatManager.instance.skillpoints > 0 && isSkillDUP == false)
         {
             isSkillDUP = true;
             //PlayerStatManager.instance.PlayerCritical(10);
@@ -119,7 +119,7 @@ public class UtiSkillTree : MonoBehaviour
     }
     public void OnClick_skillE()
     {
-        if (isClickedE && isSkillBUP == true && PlayerStatManager.instance.skillpoints > 0)
+        if (isClickedE && isSkillBUP == true && PlayerStatManager.instance.skillpoints > 0 && isSkillEUP == false)
         {
             isSkillEUP = true;
             //PlayerStatManager.instance.PlayerCritical(10);
@@ -136,7 +136,7 @@ public class UtiSkillTree : MonoBehaviour
     }
     public void OnClick_skillF()
     {
-        if (isClickedF && isSkillCUP == true && PlayerStatManager.instance.skillpoints > 0)
+        if (isClickedF && isSkillCUP == true && PlayerStatManager.instance.skillpoints > 0 && isSkillFUP == false)
         {
             isSkillFUP = true;
             //PlayerStatManager.instance.PlayerCritical(10);
@@ -153,7 +153,7 @@ public class UtiSkillTree : MonoBehaviour
     }
     public void OnClick_skillG()
     {
-        if (isClickedG && isSkillCUP == true && PlayerStatManager.instance.skillpoints > 0)
+        if (isClickedG && isSkillCUP == true && PlayerStatManager.instance.skillpoints > 0 && isSkillGUP == false)
         {
             isSkillGUP = true;
             //PlayerStatManager.instance.PlayerCritical(10);
@@ -170,7 +170,7 @@ public class UtiSkillTree : MonoBehaviour
     }
     public void OnClick_skillH()
     {
-        if (isClickedH && (isSkillDUP || isSkillEUP || isSkillFUP || isSkillGUP == true) && PlayerStatManager.instance.skillpoints > 0)
+        if (isClickedH && (isSkillDUP || isSkillEUP || isSkillFUP || isSkillGUP == true) && PlayerStatManager.instance.skillpoints > 0 && isSkillHUP == false)
         {
             isSkillHUP = true;
             UpSkillLevel();

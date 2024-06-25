@@ -1226,7 +1226,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &113435027
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8461,6 +8461,7 @@ MonoBehaviour:
   _hpBar: {fileID: 699560843}
   _staminaBar: {fileID: 82506323}
   _mpBar: {fileID: 2098212444}
+  StatusInfo: {fileID: 113435026}
 --- !u!1 &777813645
 GameObject:
   m_ObjectHideFlags: 0
