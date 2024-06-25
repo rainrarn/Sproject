@@ -140,11 +140,7 @@ public class PlayerStatManager : MonoBehaviour
         skillpoints--;
     }
 
-    public void GetMp(int mp)
-    {
-        _mp += mp;
-    }
-
+ 
     public void GetManaCristal()
     {
         if(_mp>=_maxMp && _cristalcount < 5)
@@ -159,7 +155,7 @@ public class PlayerStatManager : MonoBehaviour
         _cristalcount++;
         CristalActive();
     }
-
+    
     private void MinusCristal()
     {
         _cristalcount--;
@@ -208,4 +204,19 @@ public class PlayerStatManager : MonoBehaviour
             ManaCristal5.SetActive(true);
         }
     }
+
+    public void GetHeal(int hp)
+    {
+        _hp += hp;
+    }
+
+    public void GetDamaged(int hp)
+    {
+        _hp -= hp;
+    }
+    public void GetMp(int mp)
+    {
+        _mp += mp;
+    }
+
 }
