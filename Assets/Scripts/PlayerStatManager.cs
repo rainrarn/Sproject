@@ -6,6 +6,13 @@ public class PlayerStatManager : MonoBehaviour
 {
     public static PlayerStatManager instance { get; private set; }
 
+    public float _hp;
+    public float _maxHp;
+    public float _stamina;
+    public float _maxStamina;
+    public float _mp;
+    public float _maxMp;
+    public int _mpcristal;
     public int _atk;
     public float _critical;
     public int skillpoints;
@@ -16,7 +23,6 @@ public class PlayerStatManager : MonoBehaviour
         _critical = 0;
         skillpoints = 10;
     }
-
     public void PlayerAtkUp(int atk)
     {
         _atk += atk;
@@ -27,7 +33,7 @@ public class PlayerStatManager : MonoBehaviour
     }
     public void GetSkillPoints()
     {
-
+        skillpoints++;
     }
     public void UseSkillPoints()
     {

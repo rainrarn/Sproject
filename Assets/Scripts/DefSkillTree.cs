@@ -1,10 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
-
-public class AtkSkillTree : MonoBehaviour
+public class DefSkillTree : MonoBehaviour
 {
     [SerializeField] private GameObject _skillA;
     [SerializeField] private GameObject _skillB;
@@ -33,6 +32,7 @@ public class AtkSkillTree : MonoBehaviour
     private bool isSkillHUP;
     [SerializeField] private TextMeshProUGUI _skillInfo;
 
+    
 
     public void Awake()
     {
@@ -47,14 +47,14 @@ public class AtkSkillTree : MonoBehaviour
         _skillH.GetComponent<Image>().color = color;
 
     }
-    public void OnClick_skillA() 
+    public void OnClick_skillA()
     {
-        if (isClickedA && PlayerStatManager.instance.skillpoints > 0 &&isSkillAUP ==false)
+        if (isClickedA && PlayerStatManager.instance.skillpoints > 0 && isSkillAUP == false)
         {
             isSkillAUP = true;
             //PlayerStatManager.instance.PlayerAtkUp(1);
             Color color = _skillA.GetComponent<Image>().color;
-            _skillB.GetComponent<Image>().color= color;
+            _skillB.GetComponent<Image>().color = color;
             _skillC.GetComponent<Image>().color = color;
             UpSkillLevel();
         }
@@ -67,7 +67,7 @@ public class AtkSkillTree : MonoBehaviour
     }
     public void OnClick_skillB()
     {
-        if (isClickedB && isSkillAUP ==true && PlayerStatManager.instance.skillpoints > 0 && isSkillBUP == false)
+        if (isClickedB && isSkillAUP == true && PlayerStatManager.instance.skillpoints > 0 && isSkillBUP == false)
         {
             isSkillBUP = true;
             //PlayerStatManager.instance.PlayerCritical(10);
@@ -171,7 +171,7 @@ public class AtkSkillTree : MonoBehaviour
     }
     public void OnClick_skillH()
     {
-        if (isClickedH && (isSkillDUP || isSkillEUP || isSkillFUP|| isSkillGUP == true) && PlayerStatManager.instance.skillpoints > 0 && isSkillHUP == false)
+        if (isClickedH && (isSkillDUP || isSkillEUP || isSkillFUP || isSkillGUP == true) && PlayerStatManager.instance.skillpoints > 0 && isSkillHUP == false)
         {
             isSkillHUP = true;
             UpSkillLevel();
@@ -187,14 +187,14 @@ public class AtkSkillTree : MonoBehaviour
 
     private void DisableSkills()
     {
-        isClickedA =false;
-        isClickedB =false;
-        isClickedC =false;
-        isClickedD =false;
-        isClickedE =false;
-        isClickedF =false;
-        isClickedG =false;
-        isClickedH =false;
+        isClickedA = false;
+        isClickedB = false;
+        isClickedC = false;
+        isClickedD = false;
+        isClickedE = false;
+        isClickedF = false;
+        isClickedG = false;
+        isClickedH = false;
         _skillInfo.text = "Ό³Έν";
     }
 
