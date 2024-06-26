@@ -40,6 +40,7 @@ public class PlayerView : MonoBehaviour
     {
         _inputCallback?.Invoke(context);
     }
+
     public Vector2 GetMoveInput()
     {
         return _moveInput;

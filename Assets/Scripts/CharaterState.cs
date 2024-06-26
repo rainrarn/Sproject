@@ -46,6 +46,10 @@ public class IdleState : StateBase
         {
             _player.ChangeState(new MoveState(_player));
         }
+        if(context.action.name == "Dodge")
+        {
+            _player.ChangeState(new DodgeState(_player));
+        }
     }
 }
 
@@ -82,6 +86,53 @@ public class MoveState : StateBase
         if (context.action.name == "Atk")
         {
             _player.ChangeState(new AtkState(_player));
+        }
+        if (context.action.name == "Dodge")
+        {
+            _player.ChangeState(new DodgeState(_player));
+        }
+    }
+}
+public class DodgeState : StateBase
+{
+    private readonly PlayerView _player;
+    public DodgeState(PlayerView player)
+    {
+        _player = player;
+    }
+
+    public override void EnterState()
+    {
+        _player.Animator_Player.SetTrigger("Dodge");
+    }
+    public override void ExecuteOnUpdate()
+    {
+        var animInfo = _player.Animator_Player.GetCurrentAnimatorStateInfo(0);
+        if(animInfo.normalizedTime>1)
+        {
+            _player.ChangeState(new IdleState(_player));
+        }
+    }
+}
+public class ItemState : StateBase
+{
+    private readonly PlayerView _player;
+    public ItemState(PlayerView player)
+    {
+        _player = player;
+    }
+
+    public override void EnterState()
+    {
+        _player.Animator_Player.SetTrigger("Use");
+    }
+
+    public override void ExecuteOnUpdate()
+    {
+        var animInfo = _player.Animator_Player.GetCurrentAnimatorStateInfo(0);
+        if (animInfo.normalizedTime > 1)
+        {
+            _player.ChangeState(new IdleState(_player));
         }
     }
 }
