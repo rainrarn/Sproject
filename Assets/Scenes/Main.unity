@@ -8458,6 +8458,8 @@ MonoBehaviour:
   _atk: 0
   _critical: 0
   skillpoints: 0
+  _healingpotion: 0
+  _potionheal: 0
   _hpBar: {fileID: 699560843}
   _staminaBar: {fileID: 82506323}
   _mpBar: {fileID: 2098212444}
