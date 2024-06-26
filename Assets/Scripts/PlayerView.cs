@@ -14,6 +14,8 @@ public class PlayerView : MonoBehaviour
 
     private Action<InputAction.CallbackContext> _inputCallback;
 
+    private Vector2 _moveInput;
+
     private void Start()
     {
         ChangeState(new IdleState(this));
@@ -37,5 +39,19 @@ public class PlayerView : MonoBehaviour
     public void OnActionInput(InputAction.CallbackContext context)
     {
         _inputCallback?.Invoke(context);
+    }
+    public Vector2 GetMoveInput()
+    {
+        return _moveInput;
+    }
+
+    public void OnMoveInput(InputAction.CallbackContext context)
+    {
+        _moveInput = context.ReadValue<Vector2>();
+    }
+
+    public void Move(Vector2 moveInput)
+    {
+        
     }
 }

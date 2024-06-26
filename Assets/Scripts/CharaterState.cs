@@ -60,8 +60,30 @@ public class MoveState : StateBase
     public override void EnterState()
     {
         _player.Animator_Player.SetTrigger("Move");
+        _player.BindInputCallback(true, OnInputCallback);
     }
-    
+    public override void ExitState()
+    {
+        _player.BindInputCallback(false,OnInputCallback);
+    }
+
+    public override void ExecuteOnUpdate()
+    {
+        Vector2 moveInput = _player.GetMoveInput();
+        _player.Move(moveInput);
+
+        if(moveInput == Vector2.zero)
+        {
+            _player.ChangeState(new IdleState(_player));
+        }
+    }
+    public override void OnInputCallback(InputAction.CallbackContext context)
+    {
+        if (context.action.name == "Atk")
+        {
+            _player.ChangeState(new AtkState(_player));
+        }
+    }
 }
 public class AtkState : StateBase
 {
