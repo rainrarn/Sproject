@@ -40,7 +40,7 @@ public class IdleState : StateBase
     {
         if(context.action.name == "Atk")
         {
-            _player.ChangeState(new AtkState(_player));
+            _player.ChangeState(new Atk1State(_player));
         }
         if(context.action.name == "Move")
         {
@@ -85,7 +85,7 @@ public class MoveState : StateBase
     {
         if (context.action.name == "Atk")
         {
-            _player.ChangeState(new AtkState(_player));
+            _player.ChangeState(new Atk1State(_player));
         }
         if (context.action.name == "Dodge")
         {
@@ -136,23 +136,73 @@ public class ItemState : StateBase
         }
     }
 }
-public class AtkState : StateBase
+public class Atk1State : StateBase
 {
     private readonly PlayerView _player;
-    public AtkState(PlayerView player)
+    public Atk1State(PlayerView player)
     {
         _player = player;
     }
 
     public override void EnterState()
     {
-        _player.Animator_Player.SetTrigger("Atk");
+        _player.Animator_Player.SetTrigger("Atk1");
+        _player.BindInputCallback(true,OnInputCallback);
+    }
+    public override void ExitState()
+    {
+        _player.BindInputCallback(false,OnInputCallback);
     }
 
     public override void ExecuteOnUpdate()
     {
         var animInfo = _player.Animator_Player.GetCurrentAnimatorStateInfo(0);
         if(animInfo.normalizedTime>1)
+        {
+            _player.ChangeState(new IdleState(_player));
+        }
+    }
+}
+
+public class Atk2State : StateBase
+{
+    private readonly PlayerView _player;
+    public Atk2State(PlayerView player)
+    {
+        _player = player;
+    }
+
+    public override void EnterState()
+    {
+        _player.Animator_Player.SetTrigger("Atk2");
+    }
+
+    public override void ExecuteOnUpdate()
+    {
+        var animInfo = _player.Animator_Player.GetCurrentAnimatorStateInfo(0);
+        if (animInfo.normalizedTime > 1)
+        {
+            _player.ChangeState(new IdleState(_player));
+        }
+    }
+}
+public class Atk3State : StateBase
+{
+    private readonly PlayerView _player;
+    public Atk3State(PlayerView player)
+    {
+        _player = player;
+    }
+
+    public override void EnterState()
+    {
+        _player.Animator_Player.SetTrigger("Atk3");
+    }
+
+    public override void ExecuteOnUpdate()
+    {
+        var animInfo = _player.Animator_Player.GetCurrentAnimatorStateInfo(0);
+        if (animInfo.normalizedTime > 1)
         {
             _player.ChangeState(new IdleState(_player));
         }
