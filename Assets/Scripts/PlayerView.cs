@@ -4,69 +4,86 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+
 public class PlayerView : MonoBehaviour
 {
-    [Header("Camera")]
-    public GameObject CinemachineCameraTarget;
+    
+    public Animator Animator_Player;
+    private CharaterInputs _input;
+    private IState _curState;
+    private Action<InputAction.CallbackContext> _inputCallback;
+    private Vector2 _moveInput;
 
-    [Tooltip("How far in degrees can you move the camera up")]
-    public float TopClamp = 70.0f;
-
-    [Tooltip("How far in degrees can you move the camera down")]
-    public float BottomClamp = -30.0f;
-
-    [Tooltip("Additional degrees to override the camera. Useful for fine-tuning camera position when locked")]
-    public float CameraAngleOverride = 0.0f;
-
-    [Tooltip("For locking the camera position on all axis")]
-    public bool LockCameraPosition = false;
-
-    // cinemachine
-    private float _cinemachineTargetYaw;
-    private float _cinemachineTargetPitch;
-
-    private PlayerInputs _input;
+    // 추가된 변수들
+    public float MoveSpeed = 2.0f;
+    public float SprintSpeed = 5.335f;
+    public float RotationSmoothTime = 0.12f;
+    private float _speed;
+    private float _rotationVelocity;
+    private float _verticalVelocity;
+    private CharacterController _controller;
     private GameObject _mainCamera;
-
-    private const float _threshold = 0.01f;
-
-    private void Awake()
-    {
-        if (_mainCamera == null)
-        {
-            _mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
-        }
-    }
 
     private void Start()
     {
-        _input = GetComponent<PlayerInputs>();
+        ChangeState(new IdleState(this));
+        _input = GetComponent<CharaterInputs>();
+        _controller = GetComponent<CharacterController>();
+        _mainCamera = Camera.main.gameObject;
     }
 
-    private void LateUpdate()
+    private void Update()
     {
-        CameraRotation();
+        Move();
     }
 
-    private void CameraRotation()
+    public void ChangeState(IState newState)
     {
-        if (_input.look.sqrMagnitude >= _threshold && !LockCameraPosition)
+        _curState?.ExitState();
+        _curState = newState;
+        _curState.EnterState();
+    }
+
+    public void BindInputCallback(bool isBind, Action<InputAction.CallbackContext> callback)
+    {
+        if (isBind)
+            _inputCallback += callback;
+        else
+            _inputCallback -= callback;
+    }
+
+    public void OnActionInput(InputAction.CallbackContext context)
+    {
+        _inputCallback?.Invoke(context);
+    }
+
+    public Vector2 GetMoveInput()
+    {
+        return _moveInput;
+    }
+
+    public void OnMoveInput(InputAction.CallbackContext context)
+    {
+        _moveInput = context.ReadValue<Vector2>();
+    }
+
+    // 이동 기능 추가
+    public void Move()
+    {
+        float targetSpeed = _moveInput == Vector2.zero ? 0.0f : MoveSpeed;
+        float currentHorizontalSpeed = new Vector3(_controller.velocity.x, 0.0f, _controller.velocity.z).magnitude;
+        float speedOffset = 0.1f;
+        _speed = Mathf.Lerp(currentHorizontalSpeed, targetSpeed, Time.deltaTime * 10.0f);
+        _speed = Mathf.Round(_speed * 1000f) / 1000f;
+
+        Vector3 inputDirection = new Vector3(_moveInput.x, 0.0f, _moveInput.y).normalized;
+        if (_moveInput != Vector2.zero)
         {
-            _cinemachineTargetYaw += _input.look.x * Time.deltaTime;
-            _cinemachineTargetPitch += _input.look.y * Time.deltaTime;
+            float targetRotation = Mathf.Atan2(inputDirection.x, inputDirection.z) * Mathf.Rad2Deg + _mainCamera.transform.eulerAngles.y;
+            float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetRotation, ref _rotationVelocity, RotationSmoothTime);
+            transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
+            Vector3 moveDirection = Quaternion.Euler(0.0f, targetRotation, 0.0f) * Vector3.forward;
+            _controller.Move(moveDirection.normalized * (_speed * Time.deltaTime) + new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
         }
-
-        _cinemachineTargetYaw = ClampAngle(_cinemachineTargetYaw, float.MinValue, float.MaxValue);
-        _cinemachineTargetPitch = ClampAngle(_cinemachineTargetPitch, BottomClamp, TopClamp);
-
-        CinemachineCameraTarget.transform.rotation = Quaternion.Euler(_cinemachineTargetPitch + CameraAngleOverride, _cinemachineTargetYaw, 0.0f);
-    }
-
-    private static float ClampAngle(float angle, float min, float max)
-    {
-        if (angle < -360f) angle += 360f;
-        if (angle > 360f) angle -= 360f;
-        return Mathf.Clamp(angle, min, max);
     }
 }
-

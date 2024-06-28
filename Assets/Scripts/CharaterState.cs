@@ -38,15 +38,15 @@ public class IdleState : StateBase
 
     public override void OnInputCallback(InputAction.CallbackContext context)
     {
-        if(context.action.name == "Atk")
+        if (context.action.name == "Atk")
         {
             _player.ChangeState(new Atk1State(_player));
         }
-        if(context.action.name == "Move")
+        if (context.action.name == "Move")
         {
             _player.ChangeState(new MoveState(_player));
         }
-        if(context.action.name == "Dodge")
+        if (context.action.name == "Dodge")
         {
             _player.ChangeState(new DodgeState(_player));
         }
@@ -68,15 +68,15 @@ public class MoveState : StateBase
     }
     public override void ExitState()
     {
-        _player.BindInputCallback(false,OnInputCallback);
+        _player.BindInputCallback(false, OnInputCallback);
     }
 
     public override void ExecuteOnUpdate()
     {
         Vector2 moveInput = _player.GetMoveInput();
-        _player.Move(moveInput);
+        //_player.Move(moveInput);
 
-        if(moveInput == Vector2.zero)
+        if (moveInput == Vector2.zero)
         {
             _player.ChangeState(new IdleState(_player));
         }
@@ -108,7 +108,7 @@ public class DodgeState : StateBase
     public override void ExecuteOnUpdate()
     {
         var animInfo = _player.Animator_Player.GetCurrentAnimatorStateInfo(0);
-        if(animInfo.normalizedTime>1)
+        if (animInfo.normalizedTime > 1)
         {
             _player.ChangeState(new IdleState(_player));
         }
@@ -147,17 +147,17 @@ public class Atk1State : StateBase
     public override void EnterState()
     {
         _player.Animator_Player.SetTrigger("Atk1");
-        _player.BindInputCallback(true,OnInputCallback);
+        _player.BindInputCallback(true, OnInputCallback);
     }
     public override void ExitState()
     {
-        _player.BindInputCallback(false,OnInputCallback);
+        _player.BindInputCallback(false, OnInputCallback);
     }
 
     public override void ExecuteOnUpdate()
     {
         var animInfo = _player.Animator_Player.GetCurrentAnimatorStateInfo(0);
-        if(animInfo.normalizedTime>1)
+        if (animInfo.normalizedTime > 1)
         {
             _player.ChangeState(new IdleState(_player));
         }
