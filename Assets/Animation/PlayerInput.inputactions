@@ -30,33 +30,6 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "SubAtk",
-                    "type": "Button",
-                    "id": "e0ea823e-6537-44da-9c6d-1424dec652aa",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "Dodge",
-                    "type": "Value",
-                    "id": "75dcbfaa-031d-4f98-a468-1197438533de",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
-                },
-                {
-                    "name": "Gurad",
-                    "type": "Value",
-                    "id": "37bd9667-c54b-4030-aea2-5b27f50a07f3",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
                     "initialStateCheck": true
                 }
             ],
@@ -121,7 +94,7 @@
                     "id": "e0b93147-45b5-4567-ae88-d6618a226725",
                     "path": "<Pointer>/delta",
                     "interactions": "",
-                    "processors": "",
+                    "processors": "InvertVector2(invertX=false),ScaleVector2(x=0.05,y=0.05)",
                     "groups": "",
                     "action": "Look",
                     "isComposite": false,
@@ -140,34 +113,12 @@
                 },
                 {
                     "name": "",
-                    "id": "848dc1cf-d975-4639-90fe-b8bc003fba85",
-                    "path": "<Keyboard>/leftCtrl",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "SubAtk",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "5f37e826-8ada-4080-b997-4dbc0072175d",
+                    "id": "acd2f1b1-d62c-4e5e-b810-5661d8261b74",
                     "path": "<Keyboard>/space",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Dodge",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "cd55532b-f997-4ae4-ae28-e66bbb7b5519",
-                    "path": "<Mouse>/rightButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Gurad",
+                    "action": "Atk",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
