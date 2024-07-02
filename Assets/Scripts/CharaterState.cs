@@ -24,9 +24,9 @@ public class StateBase : IState
 // Idle 상태 클래스
 public class IdleState : StateBase
 {
-    private readonly PlayerView _player;
+    private readonly PlayerController _player;
 
-    public IdleState(PlayerView player)
+    public IdleState(PlayerController player)
     {
         _player = player;
     }
@@ -34,7 +34,6 @@ public class IdleState : StateBase
     // Idle 상태 진입 시 호출
     public override void EnterState()
     {
-        _player.Animator_Player.SetTrigger("Stop");
         _player.BindInputCallback(true, OnInputCallback);
     }
 
@@ -65,9 +64,9 @@ public class IdleState : StateBase
 // Move 상태 클래스
 public class MoveState : StateBase
 {
-    private readonly PlayerView _player;
+    private readonly PlayerController _player;
 
-    public MoveState(PlayerView player)
+    public MoveState(PlayerController player)
     {
         _player = player;
     }
@@ -75,21 +74,23 @@ public class MoveState : StateBase
     // Move 상태 진입 시 호출
     public override void EnterState()
     {
-        _player.Animator_Player.SetTrigger("Move");
+        _player.Animator_Player.SetBool("Moving", true);
         _player.BindInputCallback(true, OnInputCallback);
     }
 
     // Move 상태 종료 시 호출
     public override void ExitState()
     {
+        _player.Animator_Player.SetBool("Moving", false);
         _player.BindInputCallback(false, OnInputCallback);
+
     }
 
     // Move 상태 갱신 시 호출
     public override void ExecuteOnUpdate()
     {
         Vector2 moveInput = _player.GetMoveInput(); // 이동 입력 받기
-        //_player.Move(moveInput); // 이동 처리 (주석 처리됨)
+        _player.Move(); // 이동 처리 (주석 처리됨)
 
         if (moveInput == Vector2.zero) // 이동 입력이 없으면 Idle 상태로 전환
         {
@@ -102,11 +103,8 @@ public class MoveState : StateBase
     {
         if (context.action.name == "Atk")
         {
+            _player.Animator_Player.SetBool("Moving", false);
             _player.ChangeState(new Atk1State(_player));
-        }
-        if (context.action.name == "Dodge")
-        {
-            _player.ChangeState(new DodgeState(_player));
         }
     }
 }
@@ -114,9 +112,9 @@ public class MoveState : StateBase
 // Dodge 상태 클래스
 public class DodgeState : StateBase
 {
-    private readonly PlayerView _player;
+    private readonly PlayerController _player;
 
-    public DodgeState(PlayerView player)
+    public DodgeState(PlayerController player)
     {
         _player = player;
     }
@@ -141,9 +139,9 @@ public class DodgeState : StateBase
 // Item 상태 클래스
 public class ItemState : StateBase
 {
-    private readonly PlayerView _player;
+    private readonly PlayerController _player;
 
-    public ItemState(PlayerView player)
+    public ItemState(PlayerController player)
     {
         _player = player;
     }
@@ -168,10 +166,10 @@ public class ItemState : StateBase
 // Atk1 상태 클래스 (연속 공격의 첫 번째 단계)
 public class Atk1State : StateBase
 {
-    private readonly PlayerView _player;
+    private readonly PlayerController _player;
     private bool _isCombo; // 연속 공격 여부 플래그
 
-    public Atk1State(PlayerView player)
+    public Atk1State(PlayerController player)
     {
         _player = player;
     }
@@ -195,12 +193,13 @@ public class Atk1State : StateBase
     public override void ExecuteOnUpdate()
     {
         var animInfo = _player.Animator_Player.GetCurrentAnimatorStateInfo(0);
-        if (animInfo.normalizedTime > 0.5f && _isCombo)
+        if (animInfo.normalizedTime > 0.7f && _isCombo)
         {
             _player.ChangeState(new Atk2State(_player));
         }
-        else if (animInfo.normalizedTime == 1) // 애니메이션이 끝나면 Idle 상태로 전환
+        else if (animInfo.normalizedTime >= 1) // 애니메이션이 끝나면 Idle 상태로 전환
         {
+            _player.Animator_Player.SetTrigger("Stop");
             _player.ChangeState(new IdleState(_player));
         }
     }
@@ -218,10 +217,10 @@ public class Atk1State : StateBase
 // Atk2 상태 클래스 (연속 공격의 두 번째 단계)
 public class Atk2State : StateBase
 {
-    private readonly PlayerView _player;
+    private readonly PlayerController _player;
     private bool _isCombo; // 연속 공격 여부 플래그
 
-    public Atk2State(PlayerView player)
+    public Atk2State(PlayerController player)
     {
         _player = player;
     }
@@ -247,12 +246,13 @@ public class Atk2State : StateBase
     public override void ExecuteOnUpdate()
     {
         var animInfo = _player.Animator_Player.GetCurrentAnimatorStateInfo(0);
-        if (animInfo.normalizedTime > 0.5f && _isCombo)
+        if (animInfo.normalizedTime > 0.7f && _isCombo)
         {
             _player.ChangeState(new Atk3State(_player));
         }
-        else if (animInfo.normalizedTime == 1) // 애니메이션이 끝나면 Idle 상태로 전환
+        else if (animInfo.normalizedTime >= 1) // 애니메이션이 끝나면 Idle 상태로 전환
         {
+            _player.Animator_Player.SetTrigger("Stop");
             _player.ChangeState(new IdleState(_player));
         }
     }
@@ -270,9 +270,9 @@ public class Atk2State : StateBase
 // Atk3 상태 클래스 (연속 공격의 세 번째 단계)
 public class Atk3State : StateBase
 {
-    private readonly PlayerView _player;
+    private readonly PlayerController _player;
 
-    public Atk3State(PlayerView player)
+    public Atk3State(PlayerController player)
     {
         _player = player;
     }
@@ -281,13 +281,11 @@ public class Atk3State : StateBase
     public override void EnterState()
     {
         _player.Animator_Player.SetTrigger("Atk3");
-        _player.BindInputCallback(true, OnInputCallback);
     }
 
     // Atk3 상태 종료 시 호출
     public override void ExitState()
     {
-        _player.BindInputCallback(false, OnInputCallback);
         
     }
 
@@ -295,8 +293,9 @@ public class Atk3State : StateBase
     public override void ExecuteOnUpdate()
     {
         var animInfo = _player.Animator_Player.GetCurrentAnimatorStateInfo(0);
-        if (animInfo.normalizedTime == 1) // 애니메이션이 끝나면 Idle 상태로 전환
+        if (animInfo.normalizedTime >= 1) // 애니메이션이 끝나면 Idle 상태로 전환
         {
+            _player.Animator_Player.SetTrigger("Stop");
             _player.ChangeState(new IdleState(_player));
         }
     }
