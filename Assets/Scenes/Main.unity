@@ -31313,7 +31313,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1454030328027198719}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f92828ddb1ab8c247acc67ba4141087a, type: 3}
   m_Name: 
@@ -31419,19 +31419,7 @@ MonoBehaviour:
     m_ActionId: d3101cf6-6f2c-4afd-99f7-469fe2c99e30
     m_ActionName: Player/Move[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
   - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 5297988640372765764}
-        m_TargetAssemblyTypeName: PlayerView, Assembly-CSharp
-        m_MethodName: OnLookInput
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_ActionId: 897a0fa2-beb1-42c9-a8c8-9193b03f7009
     m_ActionName: Player/Look[/Mouse/delta]
   - m_PersistentCalls:

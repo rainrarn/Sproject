@@ -34,6 +34,7 @@ public class IdleState : StateBase
     // Idle 상태 진입 시 호출
     public override void EnterState()
     {
+        _player.Animator_Player.SetTrigger("Stop");
         _player.BindInputCallback(true, OnInputCallback);
     }
 
@@ -198,7 +199,7 @@ public class Atk1State : StateBase
         {
             _player.ChangeState(new Atk2State(_player));
         }
-        else if (animInfo.normalizedTime >= 1) // 애니메이션이 끝나면 Idle 상태로 전환
+        else if (animInfo.normalizedTime == 1) // 애니메이션이 끝나면 Idle 상태로 전환
         {
             _player.ChangeState(new IdleState(_player));
         }
@@ -230,6 +231,8 @@ public class Atk2State : StateBase
     {
         _isCombo = false; // 연속 공격 초기화
         _player.Animator_Player.SetTrigger("Atk2");
+        Debug.LogWarning("어택2들어옴");
+
         _player.BindInputCallback(true, OnInputCallback);
     }
 
@@ -244,11 +247,11 @@ public class Atk2State : StateBase
     public override void ExecuteOnUpdate()
     {
         var animInfo = _player.Animator_Player.GetCurrentAnimatorStateInfo(0);
-        if (animInfo.normalizedTime > 0.5f && _isCombo) // 애니메이션 70% 진행 시 다음 공격 상태로 전환
+        if (animInfo.normalizedTime > 0.5f && _isCombo)
         {
             _player.ChangeState(new Atk3State(_player));
         }
-        else if (animInfo.normalizedTime >= 1) // 애니메이션이 끝나면 Idle 상태로 전환
+        else if (animInfo.normalizedTime == 1) // 애니메이션이 끝나면 Idle 상태로 전환
         {
             _player.ChangeState(new IdleState(_player));
         }
@@ -292,7 +295,7 @@ public class Atk3State : StateBase
     public override void ExecuteOnUpdate()
     {
         var animInfo = _player.Animator_Player.GetCurrentAnimatorStateInfo(0);
-        if (animInfo.normalizedTime >= 1) // 애니메이션이 끝나면 Idle 상태로 전환
+        if (animInfo.normalizedTime == 1) // 애니메이션이 끝나면 Idle 상태로 전환
         {
             _player.ChangeState(new IdleState(_player));
         }
