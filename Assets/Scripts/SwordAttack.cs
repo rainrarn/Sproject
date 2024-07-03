@@ -8,7 +8,9 @@ public class SwordAttack : MonoBehaviour
     {
         if(other.CompareTag("Enemy"))
         {
+            
             Debug.Log("РћСп");
+
         }
     }
 }

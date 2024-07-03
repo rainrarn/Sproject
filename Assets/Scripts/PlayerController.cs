@@ -40,6 +40,13 @@ public class PlayerController : MonoBehaviour
     private Animator _animator;
     private CharacterController _controller;
 
+    public ParticleSystem Atk1;
+    public ParticleSystem Atk2;
+    public ParticleSystem Atk3;
+    public ParticleSystem Atk4;
+
+    public SphereCollider Atk;
+
     private void Start()
     {
         ChangeState(new IdleState(this));
@@ -67,6 +74,7 @@ public class PlayerController : MonoBehaviour
         _curState = newState;
         Text_TemporalState.text = _curState.ToString();
         _curState.EnterState();
+        
     }
 
     public void BindInputCallback(bool isBind, Action<InputAction.CallbackContext> callback)
@@ -164,5 +172,11 @@ public class PlayerController : MonoBehaviour
         _cinemachineTargetPitch = Mathf.Clamp(_cinemachineTargetPitch, BottomClamp, TopClamp);
 
         CinemachineCameraTarget.transform.rotation = Quaternion.Euler(_cinemachineTargetPitch + CameraAngleOverride, _cinemachineTargetYaw, 0.0f);
+    }
+
+    // 애니메이션 완료 이벤트 처리 메서드
+    public void OnAnimationComplete(string animationName)
+    {
+        _curState.OnAnimationComplete(animationName);
     }
 }
