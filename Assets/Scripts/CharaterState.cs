@@ -184,11 +184,13 @@ public class Atk1State : StateBase
         _player.Animator_Player.SetTrigger("Atk1");
         _player.Atk1.Play();
         _player.BindInputCallback(true, OnInputCallback);
+        _player.AtkCollider.SetActive(true);
     }
 
     // Atk1 상태 종료 시 호출
     public override void ExitState()
     {
+        _player.AtkCollider.SetActive(false);
         _player.BindInputCallback(false, OnInputCallback);
         _isCombo = false;
     }
@@ -196,17 +198,6 @@ public class Atk1State : StateBase
     // Atk1 상태 갱신 시 호출
     public override void ExecuteOnUpdate()
     {
-        //var animInfo = _player.Animator_Player.GetCurrentAnimatorStateInfo(0);
-        //if (animInfo.normalizedTime > 0.5f && _isCombo)
-        //{
-        //    _player.ChangeState(new Atk2State(_player));
-        //}
-        //else if (animInfo.normalizedTime >= 1) // 애니메이션이 끝나면 Idle 상태로 전환
-        //{
-        //    _player.Animator_Player.SetTrigger("Stop");
-        //    _player.ChangeState(new IdleState(_player));
-        //}
-        
     }
 
     // 입력 콜백 처리
@@ -219,11 +210,6 @@ public class Atk1State : StateBase
     }
     public override void OnAnimationComplete(string animationName)
     {
-        //if (animationName == "Atk1")
-        //{
-        //    // 다음 상태로 전환
-        //    _player.ChangeState(new Atk2State(_player));
-        //}
         if(_isCombo)
         {
             _player.ChangeState(new Atk2State(_player));
@@ -253,13 +239,14 @@ public class Atk2State : StateBase
         _isCombo = false; // 연속 공격 초기화
         _player.Animator_Player.SetTrigger("Atk2");
         _player.Atk2.Play();
-
+        _player.AtkCollider.SetActive(true);
         _player.BindInputCallback(true, OnInputCallback);
     }
 
     // Atk2 상태 종료 시 호출
     public override void ExitState()
     {
+        _player.AtkCollider.SetActive(false);
         _player.BindInputCallback(false, OnInputCallback);
         _isCombo = false;
     }
@@ -267,16 +254,6 @@ public class Atk2State : StateBase
     // Atk2 상태 갱신 시 호출
     public override void ExecuteOnUpdate()
     {
-        //var animInfo = _player.Animator_Player.GetCurrentAnimatorStateInfo(0);
-        //if (animInfo.normalizedTime > 0.5f && _isCombo)
-        //{
-        //    _player.ChangeState(new Atk3State(_player));
-        //}
-        //else if (animInfo.normalizedTime >= 1) // 애니메이션이 끝나면 Idle 상태로 전환
-        //{
-        //    _player.Animator_Player.SetTrigger("Stop");
-        //    _player.ChangeState(new IdleState(_player));
-        //}
     }
 
     // 입력 콜백 처리
@@ -289,11 +266,6 @@ public class Atk2State : StateBase
     }
     public override void OnAnimationComplete(string animationName)
     {
-        //if (animationName == "Atk1")
-        //{
-        //    // 다음 상태로 전환
-        //    _player.ChangeState(new Atk2State(_player));
-        //}
         if (_isCombo)
         {
             _player.ChangeState(new Atk3State(_player));
@@ -322,23 +294,19 @@ public class Atk3State : StateBase
         _player.Animator_Player.SetTrigger("Atk3");
         _player.Atk3.Play();
         _player.Atk4.Play();
+        _player.AtkCollider.SetActive(true);
     }
 
     // Atk3 상태 종료 시 호출
     public override void ExitState()
     {
-        
+        _player.AtkCollider.SetActive(false);
     }
 
     // Atk3 상태 갱신 시 호출
     public override void ExecuteOnUpdate()
     {
-        //var animInfo = _player.Animator_Player.GetCurrentAnimatorStateInfo(0);
-        //if (animInfo.normalizedTime >= 1) // 애니메이션이 끝나면 Idle 상태로 전환
-        //{
-        //    _player.Animator_Player.SetTrigger("Stop");
-        //    _player.ChangeState(new IdleState(_player));
-        //}
+        
     }
 
     // 입력 콜백 처리

@@ -45,7 +45,7 @@ public class PlayerController : MonoBehaviour
     public ParticleSystem Atk3;
     public ParticleSystem Atk4;
 
-    public SphereCollider Atk;
+    public GameObject AtkCollider;
 
     private void Start()
     {
@@ -90,7 +90,7 @@ public class PlayerController : MonoBehaviour
         if (context.started == false)
             return;
 
-        Debug.Log("==========입력 발생함");
+        //Debug.Log("==========입력 발생함");
 
         _inputCallback?.Invoke(context);
     }
