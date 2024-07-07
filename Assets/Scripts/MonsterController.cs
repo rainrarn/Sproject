@@ -21,10 +21,11 @@ public class MonsterController : MonoBehaviour
 
     [SerializeField] Text Text_Temporarl;
 
-
+    public ParticleSystem Breath;
+    [SerializeField] Transform BreathPose;
     public GameObject MeleeAtk1Collider;
-
-
+    public float playDuration = 5.0f; // 파티클이 재생될 시간
+    public float BeforePlay = 2.0f;
     private void Start()
     {
         meleeRange = 5.0f;
@@ -40,6 +41,11 @@ public class MonsterController : MonoBehaviour
         {
             //_curmstate.M_Act("Chase");
             AttackMelee();
+        }
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            //AttackMelee();
+            _curmstate.M_Act("CastAtk1");
         }
         if (Input.GetKeyDown(KeyCode.E))
         {
@@ -182,4 +188,26 @@ public class MonsterController : MonoBehaviour
         _curmstate.M_OnAnimationComplete(animationName);
     }
 
+    public void BeforeBreath()
+    {
+        StartCoroutine(BPlayParticle());
+    }
+    IEnumerator BPlayParticle()
+    {
+        yield return new WaitForSeconds(BeforePlay); // 지정된 시간 동안 대기
+        Breath.Play(); // 파티클 재생
+        
+        
+    }
+    public void EndBreath()
+    {
+        StartCoroutine(PlayParticle());
+    }
+    IEnumerator PlayParticle()
+    {
+
+        //Breath.Play(); // 파티클 재생
+        yield return new WaitForSeconds(playDuration); // 지정된 시간 동안 대기
+        Breath.Stop(); // 파티클 중지
+    }
 }

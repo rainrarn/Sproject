@@ -50,7 +50,7 @@ public class M_IdleState : M_StateBase
         {
             _monster.M_ChangeState(new M_MoveState(_monster));
         }
-        else if(action =="CastAtk1")
+        else if(action == "CastAtk1")
         {
             _monster.M_ChangeState(new M_CastAtk1State(_monster));
         }
@@ -196,12 +196,14 @@ public class M_CastAtk1State : M_StateBase
     }
     public override void M_EnterState()
     {
-        _monster.Animator_Monster.SetTrigger("CastAtk1State");
-        
+        _monster.Animator_Monster.SetTrigger("CastAtk1");
+        _monster.BeforeBreath();
+
+
     }
     public override void M_ExitState()
     {
-        
+        _monster.EndBreath();
     }
     public override void M_OnAnimationComplete(string animationName)
     {
