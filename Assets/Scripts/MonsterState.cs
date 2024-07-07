@@ -39,11 +39,12 @@ public class M_IdleState : M_StateBase
     {
         
     }
-
+    
     public override void M_Act(string action)
     {
         if (action == "MeleeAtk1")
         {
+            Debug.Log("2");
             _monster.M_ChangeState(new M_MeleeAtk1State(_monster));
         }
         else if (action == "Move")
@@ -80,7 +81,29 @@ public class M_MoveState : M_StateBase
     }
 }
 
-//추격
+//플레이어 바라보기
+public class M_LookState : M_StateBase
+{
+    private readonly MonsterController _monster;
+    public M_LookState(MonsterController monster)
+    {
+        _monster = monster;
+    }
+    public override void M_EnterState()
+    {
+        _monster.Animator_Monster.SetBool("Move", true);
+    }
+    public override void M_ExitState()
+    {
+        _monster.Animator_Monster.SetBool("Move", false);
+    }
+    public override void M_OnAnimationComplete(string animationName)
+    {
+        _monster.M_ChangeState(new M_IdleState(_monster));
+    }
+}
+
+//플레이어에게 다가가기
 public class M_ChaseState : M_StateBase
 {
     private readonly MonsterController _monster;
@@ -99,7 +122,36 @@ public class M_ChaseState : M_StateBase
     public override void M_ExecuteOnUpdate()
     {
         _monster.MoveToPlayer();
-        
+        if(_monster.CheckDistance() == _monster.meleeRange)
+        {
+            _monster.M_ChangeState(new M_MeleeAtk1State(_monster));
+        }
+    }
+}
+
+//플레이어 멀어지기
+public class M_BackState : M_StateBase
+{
+    private readonly MonsterController _monster;
+    public M_BackState(MonsterController monster)
+    {
+        _monster = monster;
+    }
+    public override void M_EnterState()
+    {
+        _monster.Animator_Monster.SetBool("Back", true);
+    }
+    public override void M_ExitState()
+    {
+        _monster.Animator_Monster.SetBool("Back", false);
+    }
+    public override void M_ExecuteOnUpdate()
+    {
+        _monster.MoveAwayPlayer();
+        if (_monster.CheckDistance() == _monster.castRange)
+        {
+            _monster.M_ChangeState(new M_CastAtk1State(_monster));
+        }
     }
 }
 //근접공격1
@@ -113,11 +165,11 @@ public class M_MeleeAtk1State : M_StateBase
     public override void M_EnterState()
     {
         _monster.Animator_Monster.SetTrigger("MeleeAtk1");
-        _monster.M_AttackCollider.SetActive(true);
+        _monster.MeleeAtk1Collider.SetActive(true);
     }
     public override void M_ExitState()
     {
-        _monster.M_AttackCollider.SetActive(false);
+        _monster.MeleeAtk1Collider.SetActive(false);
     }
     public override void M_OnAnimationComplete(string animationName)
     {
@@ -137,11 +189,11 @@ public class M_CastAtk1State : M_StateBase
     public override void M_EnterState()
     {
         _monster.Animator_Monster.SetTrigger("CastAtk1State");
-        _monster.M_AttackCollider.SetActive(true);
+        
     }
     public override void M_ExitState()
     {
-        _monster.M_AttackCollider.SetActive(false);
+        
     }
     public override void M_OnAnimationComplete(string animationName)
     {
