@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 public class MonsterController : MonoBehaviour
 {
     public Transform _player;
@@ -11,7 +12,7 @@ public class MonsterController : MonoBehaviour
     public float stopRange;
 
     public float moveSpeed = 1.0f;
-    public float rotationSpeed = 5.0f;
+    public float rotationSpeed = 100.0f;
 
     private bool isRotating = false;
 
@@ -37,11 +38,13 @@ public class MonsterController : MonoBehaviour
 
         if(Input.GetKeyDown(KeyCode.Q))
         {
-            _curmstate.M_Act("MeleeAtk1");
+            //_curmstate.M_Act("Chase");
+            AttackMelee();
         }
-      
-            LookPlayer();
-
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            _curmstate.M_Act("Look");
+        }
 
 
 
@@ -85,7 +88,8 @@ public class MonsterController : MonoBehaviour
 
         if(d > meleeRange)
         {
-            M_ChangeState(new M_ChaseState(this));
+            _curmstate.M_Act("Chase");
+            //M_ChangeState(new M_ChaseState(this));
         }
         else
         {
@@ -113,7 +117,7 @@ public class MonsterController : MonoBehaviour
     {
         float d = CheckDistance();
         LookPlayer();
-        if (meleeRange > d)
+        if (meleeRange < d)
         {
             Vector3 direction = (_player.position - transform.position).normalized;
             transform.position += direction * moveSpeed * Time.deltaTime;
@@ -158,43 +162,24 @@ public class MonsterController : MonoBehaviour
     {
 
     }
-    private void LookAtPlayer()
+    public float rotationDuration = 1f; // 회전 지속 시간
+    public void LookAtPlayer()
     {
-        Vector3 direction = (_player.position - transform.position).normalized;
-        Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z)); // Y축 회전만 고려
-
-        // 현재 회전 상태와 목표 회전 상태의 차이를 계산
-        float angleDifference = Quaternion.Angle(transform.rotation, lookRotation);
-
-        // 회전 방향을 구분하여 애니메이션 트리거 설정
-        float angle = Vector3.SignedAngle(transform.forward, direction, Vector3.up);
-        if (!isRotating && angleDifference > 0.1f)
+        if (!isRotating)
         {
             isRotating = true;
-            Animator_Monster.SetBool("IsRotating", true);
-            if (angle > 0)
-            {
-                Animator_Monster.SetBool("TurnRight", true);
-                Animator_Monster.SetBool("TurnLeft", false);
-            }
-            else
-            {
-                Animator_Monster.SetBool("TurnRight", false);
-                Animator_Monster.SetBool("TurnLeft", true);
-            }
-        }
+            Vector3 direction = (_player.position - transform.position).normalized;
+            Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z)); // Y축 회전만 고려
 
-        // 회전 완료 시 애니메이션 트리거 해제
-        if (isRotating && angleDifference <= 0.1f)
-        {
-            isRotating = false;
-            Animator_Monster.SetBool("IsRotating", false);
-            Animator_Monster.SetBool("TurnRight", false);
-            Animator_Monster.SetBool("TurnLeft", false);
+            transform.DORotateQuaternion(lookRotation, rotationDuration).OnComplete(() =>
+            {
+                isRotating = false;
+            });
         }
-
-        // 부드럽게 회전
-        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * rotationSpeed);
+    }
+    public void M_OnAnimationComplete(string animationName)
+    {
+        _curmstate.M_OnAnimationComplete(animationName);
     }
 
 }

@@ -13773,6 +13773,51 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!1 &1142233602
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1142233604}
+  - component: {fileID: 1142233603}
+  m_Layer: 20
+  m_Name: HeadAtkCollider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!65 &1142233603
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1142233602}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.5, y: 1, z: 0.5}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!4 &1142233604
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1142233602}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.408, z: -0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4431620571023683}
+  m_RootOrder: 9
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1165786685
 GameObject:
   m_ObjectHideFlags: 0
@@ -24863,6 +24908,7 @@ GameObject:
   - component: {fileID: 4702768408105193}
   - component: {fileID: 95830232081379611}
   - component: {fileID: 114423295979900838}
+  - component: {fileID: 114423295979900839}
   m_Layer: 20
   m_Name: Monster
   m_TagString: Enemy
@@ -26333,6 +26379,7 @@ Transform:
   - {fileID: 4767657712020899}
   - {fileID: 4445179586534053}
   - {fileID: 691068347}
+  - {fileID: 1142233604}
   m_Father: {fileID: 4655637121401905}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -27346,7 +27393,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _player: {fileID: 2262513788651892293}
-  meleeRange: 0
+  meleeRange: 5
   castRange: 0
   chaseRange: 0
   stopRange: 0
@@ -27354,7 +27401,22 @@ MonoBehaviour:
   rotationSpeed: 5
   Animator_Monster: {fileID: 95830232081379611}
   Text_Temporarl: {fileID: 0}
-  MeleeAtk1Collider: {fileID: 0}
+  MeleeAtk1Collider: {fileID: 1142233602}
+  rotationDuration: 1
+--- !u!64 &114423295979900839
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1613685366610245}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 4300002, guid: d3e27d1d4e96bc642baa89a082bfcd1a, type: 3}
 --- !u!136 &136685835460058085
 CapsuleCollider:
   m_ObjectHideFlags: 0

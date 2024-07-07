@@ -44,7 +44,6 @@ public class M_IdleState : M_StateBase
     {
         if (action == "MeleeAtk1")
         {
-            Debug.Log("2");
             _monster.M_ChangeState(new M_MeleeAtk1State(_monster));
         }
         else if (action == "Move")
@@ -54,6 +53,14 @@ public class M_IdleState : M_StateBase
         else if(action =="CastAtk1")
         {
             _monster.M_ChangeState(new M_CastAtk1State(_monster));
+        }
+        else if(action == "Look")
+        {
+            _monster.M_ChangeState(new M_LookState(_monster));
+        }
+        else if(action == "Chase")
+        {
+            _monster.M_ChangeState(new M_ChaseState(_monster));
         }
     }
         
@@ -91,11 +98,12 @@ public class M_LookState : M_StateBase
     }
     public override void M_EnterState()
     {
-        _monster.Animator_Monster.SetBool("Move", true);
+        _monster.Animator_Monster.SetTrigger("Look");
+        _monster.LookAtPlayer();
     }
     public override void M_ExitState()
     {
-        _monster.Animator_Monster.SetBool("Move", false);
+        _monster.Animator_Monster.SetTrigger("StopRot");
     }
     public override void M_OnAnimationComplete(string animationName)
     {
@@ -122,7 +130,7 @@ public class M_ChaseState : M_StateBase
     public override void M_ExecuteOnUpdate()
     {
         _monster.MoveToPlayer();
-        if(_monster.CheckDistance() == _monster.meleeRange)
+        if(_monster.CheckDistance() <= _monster.meleeRange)
         {
             _monster.M_ChangeState(new M_MeleeAtk1State(_monster));
         }
