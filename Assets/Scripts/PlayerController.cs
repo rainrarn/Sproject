@@ -1,5 +1,6 @@
 using System;
 using UnityEngine.InputSystem;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
@@ -38,8 +39,10 @@ public class PlayerController : MonoBehaviour
 
     public float dodgeDistance = 20.0f; // 회피 시 전진하는 거리
     public float dodgeDuration = 0.5f; // 회피 시간
+    public float jumpPower = 2.0f; // 점프 높이
+    public float jumpDuration = 1.0f; // 점프 시간
     private bool isDodging = false;
-    private Animator _animator;
+    private bool isJumping = false;
     private CharacterController _controller;
 
     public ParticleSystem Atk1;
@@ -47,7 +50,16 @@ public class PlayerController : MonoBehaviour
     public ParticleSystem Atk3;
     public ParticleSystem Atk4;
 
+    public ParticleSystem GuardEffect;
+    public GameObject GuardPose;
+
+    public ParticleSystem Skill1_1;
+    public ParticleSystem Skill1_2;
+
     public GameObject AtkCollider;
+
+    public GameObject Skill1Collider1;
+    public GameObject Skill1Collider2;
 
     public GameObject PlayerCollider;
     public GameObject ParryCollider;
@@ -56,7 +68,6 @@ public class PlayerController : MonoBehaviour
     {
         ChangeState(new IdleState(this));
         _controller = GetComponent<CharacterController>();
-        _animator = GetComponent<Animator>();
         _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
     }
 
@@ -65,6 +76,11 @@ public class PlayerController : MonoBehaviour
         _curState?.ExecuteOnUpdate();
         //Move();
         CameraRotation();
+        if(Input.GetKeyDown(KeyCode.X)) 
+        {
+            Jump();
+        }
+        
     }
 
     public void ChangeState(IState newState)
@@ -199,7 +215,37 @@ public class PlayerController : MonoBehaviour
                 isDodging = false;
             });
     }
+    public void Jump()
+    {
+        isJumping = true;
+        Vector3 initialPosition = transform.position;
+        Vector3 jumpTarget = initialPosition + Vector3.up * jumpPower;
 
+        // DOTween을 사용하여 점프 동작
+        DOTween.Sequence()
+            .Append(DOTween.To(() => 0f, x => _controller.Move(Vector3.up * (x - 0f)), jumpPower, jumpDuration / 2).SetEase(Ease.OutQuad))
+            .Append(DOTween.To(() => jumpPower, x => _controller.Move(Vector3.up * (0f - x)), jumpPower, jumpDuration / 2).SetEase(Ease.InQuad))
+            .OnComplete(() =>
+            {
+                isJumping = false;
+            });
+    }
+    
+    private IEnumerator Skill1Particle()
+    {
+        // a 파티클 0.3초 간격으로 3번 재생
+        for (int i = 0; i < 3; i++)
+        {
+            Skill1_1.Play();
+            yield return new WaitForSeconds(0.3f);
+        }
+
+        // 1.2초 대기
+        yield return new WaitForSeconds(1.2f);
+
+        // b 파티클 재생
+        Skill1_2.Play();
+    }
     public void Parry()
     {
         PlayerCollider.SetActive(false);

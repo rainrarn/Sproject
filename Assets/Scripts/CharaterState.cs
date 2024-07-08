@@ -59,15 +59,13 @@ public class IdleState : StateBase
         {
             _player.ChangeState(new DodgeState(_player));
         }
-
-
-        Debug.LogError($"press========{context.performed}");
-        if (context.started)
+        if (context.action.name == "Guard")
         {
-            if (context.action.name == "Guard")
-            {
-                _player.ChangeState(new GuardState(_player));
-            }
+            _player.ChangeState(new GuardState(_player));
+        }
+        if (context.action.name == "Skill1")
+        {
+            _player.ChangeState(new Skill1State(_player));
         }
     }
 }
@@ -195,6 +193,8 @@ public class GuardState : StateBase
 
     public override void EnterState()
     {
+        _player.GuardPose.SetActive(true);
+        _player.GuardEffect.Play();
         _player.BindInputCallback(true, OnInputCallback);
         //_player.Animator_Player.SetTrigger("Parry");
         _player.Parry();
@@ -206,6 +206,9 @@ public class GuardState : StateBase
         _player.BindInputCallback(false, OnInputCallback);
         _player.EndGuard();
         _player.Animator_Player.SetBool("Guard", false);
+        _player.GuardEffect.Stop();
+        _player.GuardPose.SetActive(false);
+        
     }
     public override void OnInputCallback(InputAction.CallbackContext context)
     {
@@ -404,4 +407,36 @@ public class Atk3State : StateBase
     }
 }
 
+public class Skill1State : StateBase
+{
+    private readonly PlayerController _player;
 
+    public Skill1State(PlayerController player)
+    {
+        _player = player;
+
+    }
+
+    public override void EnterState()
+    {
+        _player.Jump();
+        _player.Animator_Player.SetTrigger("Skill1");
+        
+        //_player.Skill1Collider1.SetActive(true);
+    }
+    public override void ExitState()
+    {
+        //_player.Skill1Collider1.SetActive(false);
+        _player.Animator_Player.SetTrigger("Stop");
+    }
+    public override void ExecuteOnUpdate()
+    {
+    }
+
+
+    public override void OnAnimationComplete(string animationName)
+    {
+        _player.Animator_Player.SetTrigger("Stop");
+        _player.ChangeState(new IdleState(_player));
+    }
+}
