@@ -55,7 +55,10 @@ public class PlayerController : MonoBehaviour
 
     public ParticleSystem Skill1_1;
     public ParticleSystem Skill1_2;
+    public GameObject Skill1_1obj;
+    public GameObject Skill1_2obj;
 
+    private bool stopParticles = false;
     public GameObject AtkCollider;
 
     public GameObject Skill1Collider1;
@@ -94,6 +97,10 @@ public class PlayerController : MonoBehaviour
         else if(_curState is DodgeState && newState is MoveState)
         {
             Debug.Log("회피중 이동불가");
+            return;
+        }
+        else if (_curState is Skill1State && newState is MoveState)
+        {
             return;
         }
         _curState?.ExitState();
@@ -231,20 +238,40 @@ public class PlayerController : MonoBehaviour
             });
     }
     
+    public void Skill1Effect()
+    {
+        Skill1_1obj.SetActive(true);
+        Skill1_2obj.SetActive(true);
+        StartCoroutine(Skill1Particle());
+    }
+    public void StopSkill1()
+    {
+        Skill1_1obj.SetActive(false);
+        Skill1_2obj.SetActive(false);
+
+        StopCoroutine(Skill1Particle());
+    }
     private IEnumerator Skill1Particle()
     {
-        // a 파티클 0.3초 간격으로 3번 재생
-        for (int i = 0; i < 3; i++)
+        while (!stopParticles)
         {
-            Skill1_1.Play();
-            yield return new WaitForSeconds(0.3f);
+
+            // a 파티클 0.3초 간격으로 3번 재생
+            for (int i = 0; i < 3; i++)
+            {
+                Skill1_1.Play();
+                yield return new WaitForSeconds(0.3f);
+                Skill1_1.Stop();
+            }
+
+           
+            yield return new WaitForSeconds(0.2f);
+
+            // b 파티클 재생
+            Skill1_2.Play();
+            yield return new WaitForSeconds(Skill1_2.main.duration);
+            Skill1_2.Stop();
         }
-
-        // 1.2초 대기
-        yield return new WaitForSeconds(1.2f);
-
-        // b 파티클 재생
-        Skill1_2.Play();
     }
     public void Parry()
     {

@@ -419,8 +419,9 @@ public class Skill1State : StateBase
 
     public override void EnterState()
     {
-        _player.Jump();
+        //_player.Jump();
         _player.Animator_Player.SetTrigger("Skill1");
+        _player.Skill1Effect();
         
         //_player.Skill1Collider1.SetActive(true);
     }
@@ -436,6 +437,7 @@ public class Skill1State : StateBase
 
     public override void OnAnimationComplete(string animationName)
     {
+        _player.StopSkill1();
         _player.Animator_Player.SetTrigger("Stop");
         _player.ChangeState(new IdleState(_player));
     }
