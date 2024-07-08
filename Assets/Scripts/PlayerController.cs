@@ -2,8 +2,7 @@ using System;
 using UnityEngine.InputSystem;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.InputSystem.XR;
-
+using DG.Tweening;
 public class PlayerController : MonoBehaviour
 {
     public Animator Animator_Player;
@@ -35,8 +34,11 @@ public class PlayerController : MonoBehaviour
     private float _speed;
     private float _targetRotation = 0.0f;
     private float _rotationVelocity;
+    
 
-
+    public float dodgeDistance = 20.0f; // 회피 시 전진하는 거리
+    public float dodgeDuration = 0.5f; // 회피 시간
+    private bool isDodging = false;
     private Animator _animator;
     private CharacterController _controller;
 
@@ -47,6 +49,9 @@ public class PlayerController : MonoBehaviour
 
     public GameObject AtkCollider;
 
+    public GameObject PlayerCollider;
+    public GameObject ParryCollider;
+    public GameObject GuardCollider;
     private void Start()
     {
         ChangeState(new IdleState(this));
@@ -70,6 +75,11 @@ public class PlayerController : MonoBehaviour
             Debug.Log("Cannot transition from AtkState to MoveState");
             return;
         }
+        else if(_curState is DodgeState && newState is MoveState)
+        {
+            Debug.Log("회피중 이동불가");
+            return;
+        }
         _curState?.ExitState();
         _curState = newState;
         Text_TemporalState.text = _curState.ToString();
@@ -80,6 +90,7 @@ public class PlayerController : MonoBehaviour
     public void BindInputCallback(bool isBind, Action<InputAction.CallbackContext> callback)
     {
         if (isBind)
+
             _inputCallback += callback;
         else
             _inputCallback -= callback;
@@ -172,6 +183,39 @@ public class PlayerController : MonoBehaviour
         _cinemachineTargetPitch = Mathf.Clamp(_cinemachineTargetPitch, BottomClamp, TopClamp);
 
         CinemachineCameraTarget.transform.rotation = Quaternion.Euler(_cinemachineTargetPitch + CameraAngleOverride, _cinemachineTargetYaw, 0.0f);
+    }
+
+    public void Dodge()
+    {
+        isDodging = true;
+        Vector3 dodgeDirection = transform.forward * dodgeDistance; // 현재 캐릭터가 바라보는 방향으로 전진
+        Vector3 targetPosition = transform.position + dodgeDirection;
+
+        // DOTween을 사용하여 CharacterController를 통해 이동
+        DOTween.To(() => transform.position, x => _controller.Move((x - transform.position) * Time.deltaTime), targetPosition, dodgeDuration)
+            .SetEase(Ease.OutQuad)
+            .OnComplete(() =>
+            {
+                isDodging = false;
+            });
+    }
+
+    public void Parry()
+    {
+        PlayerCollider.SetActive(false);
+        ParryCollider.SetActive(true);
+    }
+
+    public void Guard()
+    {
+        ParryCollider.SetActive(false);
+        GuardCollider.SetActive(true);
+    }
+
+    public void EndGuard()
+    {
+        GuardCollider.SetActive(false);
+        PlayerCollider.SetActive(true);
     }
 
     // 애니메이션 완료 이벤트 처리 메서드

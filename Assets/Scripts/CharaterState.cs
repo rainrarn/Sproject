@@ -59,6 +59,16 @@ public class IdleState : StateBase
         {
             _player.ChangeState(new DodgeState(_player));
         }
+
+
+        Debug.LogError($"press========{context.performed}");
+        if (context.started)
+        {
+            if (context.action.name == "Guard")
+            {
+                _player.ChangeState(new GuardState(_player));
+            }
+        }
     }
 }
 
@@ -103,10 +113,17 @@ public class MoveState : StateBase
     // 입력 콜백 처리
     public override void OnInputCallback(InputAction.CallbackContext context)
     {
+
+
         if (context.action.name == "Atk")
         {
             _player.Animator_Player.SetBool("Moving", false);
             _player.ChangeState(new Atk1State(_player));
+        }
+        else if (context.action.name == "Dodge")
+        {
+            _player.Animator_Player.SetBool("Moving", false);
+            _player.ChangeState(new DodgeState(_player));
         }
     }
 }
@@ -124,20 +141,89 @@ public class DodgeState : StateBase
     // Dodge 상태 진입 시 호출
     public override void EnterState()
     {
+        _player.Dodge();
+        _player.PlayerCollider.SetActive(false);
         _player.Animator_Player.SetTrigger("Dodge");
+
     }
 
-    // Dodge 상태 갱신 시 호출
+ 
+
+    public override void OnAnimationComplete(string animationName)
+    {
+        _player.Animator_Player.SetTrigger("Stop");
+        _player.PlayerCollider.SetActive(true);
+        _player.ChangeState(new IdleState(_player));
+    }
+}
+public class ParryState : StateBase
+{
+    private readonly PlayerController _player;
+
+    public ParryState(PlayerController player)
+    {
+        _player = player;
+    }
+
+    public override void EnterState()
+    {
+        _player.Animator_Player.SetTrigger("Parry");
+        _player.Parry();
+    }
+    public override void ExitState()
+    {
+        _player.Animator_Player.SetTrigger("Stop");
+    }
+
     public override void ExecuteOnUpdate()
     {
-        var animInfo = _player.Animator_Player.GetCurrentAnimatorStateInfo(0);
-        if (animInfo.normalizedTime > 1) // 애니메이션이 끝나면 Idle 상태로 전환
+
+    }
+    public override void OnAnimationComplete(string animationName)
+    {
+        _player.ChangeState(new GuardState(_player));
+    }
+}
+public class GuardState : StateBase
+{
+    private readonly PlayerController _player;
+
+    public GuardState(PlayerController player)
+    {
+        _player = player;
+    }
+
+    public override void EnterState()
+    {
+        _player.BindInputCallback(true, OnInputCallback);
+        //_player.Animator_Player.SetTrigger("Parry");
+        _player.Parry();
+        _player.Animator_Player.SetBool("Guard", true);
+    }
+
+    public override void ExitState()
+    {
+        _player.BindInputCallback(false, OnInputCallback);
+        _player.EndGuard();
+        _player.Animator_Player.SetBool("Guard", false);
+    }
+    public override void OnInputCallback(InputAction.CallbackContext context)
+    {
+        Debug.LogWarning($"Canceled!!!!! ==================={context.canceled}");
+
+
+        if(context.canceled)
         {
             _player.ChangeState(new IdleState(_player));
         }
     }
+    public override void OnAnimationComplete(string animationName)
+    {
+        //_player.Animator_Player.SetTrigger("Stop");
+        
+        _player.Guard();
+    }
 }
-
 // Item 상태 클래스
 public class ItemState : StateBase
 {
@@ -157,11 +243,8 @@ public class ItemState : StateBase
     // Item 상태 갱신 시 호출
     public override void ExecuteOnUpdate()
     {
-        var animInfo = _player.Animator_Player.GetCurrentAnimatorStateInfo(0);
-        if (animInfo.normalizedTime > 1) // 애니메이션이 끝나면 Idle 상태로 전환
-        {
+        
             _player.ChangeState(new IdleState(_player));
-        }
     }
 }
 
@@ -320,3 +403,5 @@ public class Atk3State : StateBase
         _player.ChangeState(new IdleState(_player));
     }
 }
+
+
