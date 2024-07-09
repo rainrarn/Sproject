@@ -62,7 +62,12 @@ public class M_IdleState : M_StateBase
         {
             _monster.M_ChangeState(new M_ChaseState(_monster));
         }
+        else if(action == "Back")
+        {
+            _monster.M_ChangeState(new M_BackState(_monster));
+        }
     }
+    
         
 }
 
@@ -107,7 +112,7 @@ public class M_LookState : M_StateBase
     }
     public override void M_OnAnimationComplete(string animationName)
     {
-        _monster.M_ChangeState(new M_IdleState(_monster));
+        _monster.M_ChangeState(new M_CastAtk1State(_monster));
     }
 }
 
@@ -156,9 +161,9 @@ public class M_BackState : M_StateBase
     public override void M_ExecuteOnUpdate()
     {
         _monster.MoveAwayPlayer();
-        if (_monster.CheckDistance() == _monster.castRange)
+        if (_monster.CheckDistance() >= _monster.castRange)
         {
-            _monster.M_ChangeState(new M_CastAtk1State(_monster));
+            _monster.M_ChangeState(new M_LookState(_monster));
         }
     }
 }

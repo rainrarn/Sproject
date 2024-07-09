@@ -63,7 +63,7 @@ public class IdleState : StateBase
         {
             _player.ChangeState(new GuardState(_player));
         }
-        if (context.action.name == "Skill1")
+        if (context.action.name == "Skill1"&&PlayerStatManager.instance._cristalcount > 0)
         {
             _player.ChangeState(new Skill1State(_player));
         }
@@ -195,36 +195,22 @@ public class GuardState : StateBase
     {
         _player.GuardPose.SetActive(true);
         _player.GuardEffect.Play();
-        _player.BindInputCallback(true, OnInputCallback);
-        //_player.Animator_Player.SetTrigger("Parry");
         _player.Parry();
         _player.Animator_Player.SetBool("Guard", true);
     }
 
     public override void ExitState()
     {
-        _player.BindInputCallback(false, OnInputCallback);
         _player.EndGuard();
         _player.Animator_Player.SetBool("Guard", false);
         _player.GuardEffect.Stop();
         _player.GuardPose.SetActive(false);
         
     }
-    public override void OnInputCallback(InputAction.CallbackContext context)
-    {
-        Debug.LogWarning($"Canceled!!!!! ==================={context.canceled}");
 
-
-        if(context.canceled)
-        {
-            _player.ChangeState(new IdleState(_player));
-        }
-    }
     public override void OnAnimationComplete(string animationName)
     {
-        //_player.Animator_Player.SetTrigger("Stop");
-        
-        _player.Guard();
+        _player.ChangeState(new IdleState(_player));
     }
 }
 // Item 상태 클래스
@@ -270,13 +256,13 @@ public class Atk1State : StateBase
         _player.Animator_Player.SetTrigger("Atk1");
         _player.Atk1.Play();
         _player.BindInputCallback(true, OnInputCallback);
-        _player.AtkCollider.SetActive(true);
+        _player.Atk1Collider.SetActive(true);
     }
 
     // Atk1 상태 종료 시 호출
     public override void ExitState()
     {
-        _player.AtkCollider.SetActive(false);
+        _player.Atk1Collider.SetActive(false);
         _player.BindInputCallback(false, OnInputCallback);
         _isCombo = false;
     }
@@ -325,14 +311,14 @@ public class Atk2State : StateBase
         _isCombo = false; // 연속 공격 초기화
         _player.Animator_Player.SetTrigger("Atk2");
         _player.Atk2.Play();
-        _player.AtkCollider.SetActive(true);
+        _player.Atk2Collider.SetActive(true);
         _player.BindInputCallback(true, OnInputCallback);
     }
 
     // Atk2 상태 종료 시 호출
     public override void ExitState()
     {
-        _player.AtkCollider.SetActive(false);
+        _player.Atk2Collider.SetActive(false);
         _player.BindInputCallback(false, OnInputCallback);
         _isCombo = false;
     }
@@ -380,19 +366,13 @@ public class Atk3State : StateBase
         _player.Animator_Player.SetTrigger("Atk3");
         _player.Atk3.Play();
         _player.Atk4.Play();
-        _player.AtkCollider.SetActive(true);
+        _player.Atk3Collider.SetActive(true);
     }
 
     // Atk3 상태 종료 시 호출
     public override void ExitState()
     {
-        _player.AtkCollider.SetActive(false);
-    }
-
-    // Atk3 상태 갱신 시 호출
-    public override void ExecuteOnUpdate()
-    {
-        
+        _player.Atk3Collider.SetActive(false);
     }
 
     // 입력 콜백 처리
@@ -419,7 +399,8 @@ public class Skill1State : StateBase
 
     public override void EnterState()
     {
-        //_player.Jump();
+        PlayerStatManager.instance.MinusCristal();
+        _player.Jump();
         _player.Animator_Player.SetTrigger("Skill1");
         _player.Skill1Effect();
         
@@ -440,5 +421,70 @@ public class Skill1State : StateBase
         _player.StopSkill1();
         _player.Animator_Player.SetTrigger("Stop");
         _player.ChangeState(new IdleState(_player));
+    }
+}
+
+public class HitState : StateBase
+{
+    private readonly PlayerController _player;
+
+    public HitState(PlayerController player)
+    {
+        _player = player;
+    }
+    public override void EnterState()
+    {
+        _player.PlayerCollider.SetActive(false);
+        _player.Animator_Player.SetBool("Hit",true);
+    }
+    public override void ExitState()
+    {
+        _player.Animator_Player.SetBool("Hit", false);
+    }
+    public override void OnAnimationComplete(string animationName)
+    {
+        _player.ChangeState(new RiseState(_player));
+    }
+}
+public class RiseState : StateBase
+{
+    private readonly PlayerController _player;
+
+    public RiseState(PlayerController player)
+    {
+        _player = player;
+    }
+    public override void EnterState()
+    {
+        _player.Animator_Player.SetBool("Rise",true);
+    }
+    public override void ExitState()
+    {
+        _player.Animator_Player.SetBool("Rise", false);
+    }
+    public override void OnAnimationComplete(string animationName)
+    {
+        _player.ChangeState(new IdleState(_player));
+    }
+}
+
+public class DeadState : StateBase
+{
+    private readonly PlayerController _player;
+
+    public DeadState(PlayerController player)
+    {
+        _player = player;
+    }
+    public override void EnterState()
+    {
+        _player.Animator_Player.SetBool("Dead",true);
+        Time.timeScale = 0.2f;
+        _player.DeadCamera.SetActive(true);
+        _player.DeadCM.Priority = 100;
+    }
+    public override void OnAnimationComplete(string animationName)
+    {
+
     }
 }

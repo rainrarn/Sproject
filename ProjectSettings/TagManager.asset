@@ -6,6 +6,13 @@ TagManager:
   tags:
   - Enemy
   - Sword
+  - Atk1
+  - Atk2
+  - Atk3
+  - Skill1_1
+  - Skill1_2
+  - Bite
+  - Breath
   layers:
   - Default
   - TransparentFX

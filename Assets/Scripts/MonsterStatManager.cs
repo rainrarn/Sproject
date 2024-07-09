@@ -25,7 +25,8 @@ public class MonsterStatManager : MonoBehaviour
         _maxhp = 1000;
         _hp = 1000;
         _hpbar.maxValue = _maxhp;
-       
+        _atk = 10;
+
         monsterName.text = _name;
     }
     private void Update()

@@ -14,7 +14,7 @@ public class SwordAttack : MonoBehaviour
         if(other.CompareTag("Enemy"))
         {
             Debug.Log("적중");
-            PlayerStatManager.instance.AtkMonster();
+            //PlayerStatManager.instance.AtkMonster();
 
             // 충돌 위치에 이펙트 활성화
             Vector3 hitPoint = other.ClosestPoint(transform.position);

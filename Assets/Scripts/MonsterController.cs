@@ -12,6 +12,7 @@ public class MonsterController : MonoBehaviour
     public float stopRange;
 
     public float moveSpeed = 1.0f;
+    public float backSpeed = 5.0f;
     public float rotationSpeed = 100.0f;
 
     private bool isRotating = false;
@@ -29,7 +30,7 @@ public class MonsterController : MonoBehaviour
     private void Start()
     {
         meleeRange = 5.0f;
-        castRange = 20.0f;
+        castRange = 10.0f;
 
         M_ChangeState(new M_IdleState(this));
     }
@@ -51,7 +52,10 @@ public class MonsterController : MonoBehaviour
         {
             _curmstate.M_Act("Look");
         }
-
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            _curmstate.M_Act("Back");
+        }
 
 
     }
@@ -139,7 +143,7 @@ public class MonsterController : MonoBehaviour
         if (castRange <d)
         { 
             Vector3 direction = (transform.position - _player.position).normalized;
-            transform.position += direction * moveSpeed * Time.deltaTime;
+            transform.position += direction * backSpeed * Time.deltaTime*5;
         }
     }
 

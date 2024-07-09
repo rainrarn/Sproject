@@ -5,10 +5,11 @@ using UnityEngine.UI;
 public class PlayerStatManager : MonoBehaviour
 {
     public static PlayerStatManager instance { get; private set; }
-
+    
     public float _hp;
     public float _maxHp;
-    
+    public float _def;
+
     public float _stamina;
     public float _maxStamina;
     public float _stamonaRegenPerSecond = 5;
@@ -44,6 +45,7 @@ public class PlayerStatManager : MonoBehaviour
         _stamina = 100;
         _maxMp = 100;
         _mp = 10;
+        _def = 5;
 
         instance = this;
         _atk = 100;
@@ -120,8 +122,7 @@ public class PlayerStatManager : MonoBehaviour
         _mpBar.value = _mp;
         _staminaBar.value = _stamina;
 
-
-
+        GetManaCristal();
     }
 
 
@@ -159,14 +160,22 @@ public class PlayerStatManager : MonoBehaviour
         CristalActive();
     }
     
-    private void MinusCristal()
+    public void MinusCristal()
     {
         _cristalcount--;
         CristalActive();
     }
     private void CristalActive()
     {
-        if (_cristalcount ==1)
+        if (_cristalcount == 0)
+        {
+            ManaCristal1.SetActive(false);
+            ManaCristal2.SetActive(false);
+            ManaCristal3.SetActive(false);
+            ManaCristal4.SetActive(false);
+            ManaCristal5.SetActive(false);
+        }
+        else if (_cristalcount ==1)
         {
             ManaCristal1.SetActive(true);
             ManaCristal2.SetActive(false);
@@ -235,8 +244,13 @@ public class PlayerStatManager : MonoBehaviour
             _hp = _maxHp;
         }
     }
-    public void AtkMonster()
+    
+    public void AtkMonster(float m)
     {
-        MonsterStatManager.M_instance._hp -= _atk;
+        MonsterStatManager.M_instance._hp -= _atk*m;
+    }
+    public void AtkPlayer(float m)
+    {
+        _hp = _hp -((MonsterStatManager.M_instance._atk*m) - _def);
     }
 }

@@ -4,7 +4,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
-
+using Cinemachine;
 public class PlayerController : MonoBehaviour
 {
     public Animator Animator_Player;
@@ -20,6 +20,9 @@ public class PlayerController : MonoBehaviour
     public AudioClip LandingAudioClip;
     public AudioClip[] FootstepAudioClips;
     [Range(0, 1)] public float FootstepAudioVolume = 0.5f;
+
+    public GameObject DeadCamera;
+    public CinemachineVirtualCamera DeadCM;
 
     public GameObject CinemachineCameraTarget;
     public float TopClamp = 70.0f;
@@ -39,10 +42,11 @@ public class PlayerController : MonoBehaviour
 
     public float dodgeDistance = 20.0f; // 회피 시 전진하는 거리
     public float dodgeDuration = 0.5f; // 회피 시간
-    public float jumpPower = 2.0f; // 점프 높이
+    public float jumpHeight = 1.0f; // 점프 높이
     public float jumpDuration = 1.0f; // 점프 시간
     private bool isDodging = false;
     private bool isJumping = false;
+    private bool isDead = false;
     private CharacterController _controller;
 
     public ParticleSystem Atk1;
@@ -59,16 +63,22 @@ public class PlayerController : MonoBehaviour
     public GameObject Skill1_2obj;
 
     private bool stopParticles = false;
-    public GameObject AtkCollider;
-
-    public GameObject Skill1Collider1;
-    public GameObject Skill1Collider2;
+    public GameObject Atk1Collider;
+    public GameObject Atk2Collider;
+    public GameObject Atk3Collider;
+    public GameObject Skill1_1Collider;
+    public GameObject Skill1_2Collider;
 
     public GameObject PlayerCollider;
     public GameObject ParryCollider;
     public GameObject GuardCollider;
     public bool islooked = false;
 
+    public string Atk; // 사용할 이펙트 태그
+    public string Skill1;
+    public float effectDuration = 2.0f; // 이펙트가 유지될 시간
+
+    private CharacterController characterController;
     [SerializeField]
     private Canvas _canvas;
     [SerializeField]
@@ -76,6 +86,7 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         ChangeState(new IdleState(this));
+        characterController = GetComponent<CharacterController>();
         _controller = GetComponent<CharacterController>();
         _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
     }
@@ -83,13 +94,12 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         _curState?.ExecuteOnUpdate();
-        CameraRotation();
-        if(Input.GetKeyDown(KeyCode.X)) 
+        if (isDead == false)
         {
-            Jump();
+            CameraRotation();
         }
-
-        if (Input.GetKeyDown(KeyCode.M)) // M 키를 눌렀을 때 몬스터 쪽으로 카메라 회전
+        
+        if (Input.GetKeyDown(KeyCode.C)) // C 키를 눌렀을 때 몬스터 쪽으로 카메라 회전
         {
             if (islooked == false)
             {
@@ -106,6 +116,14 @@ public class PlayerController : MonoBehaviour
             RotateCameraTowardsMonster();
 
         LookMark.transform.LookAt(transform);
+
+        if(isDead ==false && PlayerStatManager.instance._hp<=0)
+        {
+            ChangeState(new DeadState(this));
+            
+        }
+
+
     }
 
     public void ChangeState(IState newState)
@@ -122,6 +140,10 @@ public class PlayerController : MonoBehaviour
             return;
         }
         else if (_curState is Skill1State && newState is MoveState)
+        {
+            return;
+        }
+        else if ((_curState is HitState||_curState is RiseState) && newState is MoveState)
         {
             return;
         }
@@ -260,19 +282,28 @@ public class PlayerController : MonoBehaviour
     public void Jump()
     {
         isJumping = true;
-        Vector3 initialPosition = transform.position;
-        Vector3 jumpTarget = initialPosition + Vector3.up * jumpPower;
 
-        // DOTween을 사용하여 점프 동작
-        DOTween.Sequence()
-            .Append(DOTween.To(() => 0f, x => _controller.Move(Vector3.up * (x - 0f)), jumpPower, jumpDuration / 2).SetEase(Ease.OutQuad))
-            .Append(DOTween.To(() => jumpPower, x => _controller.Move(Vector3.up * (0f - x)), jumpPower, jumpDuration / 2).SetEase(Ease.InQuad))
-            .OnComplete(() =>
-            {
+        // 플레이어의 현재 위치
+        Vector3 startPosition = transform.position;
+        Vector3 jumpPosition = new Vector3(startPosition.x, startPosition.y + jumpHeight, startPosition.z);
+
+        // 위로 이동
+        DOTween.To(() => startPosition, x => {
+            Vector3 delta = x - transform.position;
+            characterController.Move(delta);
+        }, jumpPosition, jumpDuration / 2).SetEase(Ease.OutQuad)
+        .OnComplete(() => {
+            // 다시 아래로 이동
+            DOTween.To(() => jumpPosition, x => {
+                Vector3 delta = x - transform.position;
+                characterController.Move(delta);
+            }, startPosition, jumpDuration / 2).SetEase(Ease.InQuad)
+            .OnComplete(() => {
                 isJumping = false;
             });
+        });
     }
-    
+
     public void Skill1Effect()
     {
         Skill1_1obj.SetActive(true);
@@ -283,19 +314,22 @@ public class PlayerController : MonoBehaviour
     {
         Skill1_1obj.SetActive(false);
         Skill1_2obj.SetActive(false);
-
+        Skill1_1Collider.SetActive(false);
+        Skill1_2Collider.SetActive(false);
         StopCoroutine(Skill1Particle());
     }
     private IEnumerator Skill1Particle()
     {
         while (!stopParticles)
         {
-
+            yield return new WaitForSeconds(0.2f);
             // a 파티클 0.3초 간격으로 3번 재생
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < 2; i++)
             {
                 Skill1_1.Play();
-                yield return new WaitForSeconds(0.3f);
+                Skill1_1Collider.SetActive(true);
+                yield return new WaitForSeconds(0.2f);
+                Skill1_1Collider.SetActive(false);
                 Skill1_1.Stop();
             }
 
@@ -304,7 +338,9 @@ public class PlayerController : MonoBehaviour
 
             // b 파티클 재생
             Skill1_2.Play();
+            Skill1_2Collider.SetActive(true);
             yield return new WaitForSeconds(Skill1_2.main.duration);
+            Skill1_2Collider.SetActive(false);
             Skill1_2.Stop();
         }
     }
@@ -314,21 +350,44 @@ public class PlayerController : MonoBehaviour
         ParryCollider.SetActive(true);
     }
 
-    public void Guard()
-    {
-        ParryCollider.SetActive(false);
-        GuardCollider.SetActive(true);
-    }
-
     public void EndGuard()
     {
-        GuardCollider.SetActive(false);
+        ParryCollider.SetActive(false);
         PlayerCollider.SetActive(true);
     }
+
 
     // 애니메이션 완료 이벤트 처리 메서드
     public void OnAnimationComplete(string animationName)
     {
         _curState.OnAnimationComplete(animationName);
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Bite"))
+        {
+            Debug.Log("1");
+            PlayerStatManager.instance.AtkPlayer(1.0f);
+            ChangeState(new HitState(this));
+        }
+
+    }
+
+
+    private IEnumerator ReturnEffectToPoolAfterDelay(GameObject effect, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        // 파티클 시스템 중지
+        ParticleSystem ps = effect.GetComponent<ParticleSystem>();
+        if (ps != null)
+        {
+            ps.Stop();
+        }
+
+        EffectPullingManager.Instance.ReturnObject(effect);
+
+
     }
 }
