@@ -59,6 +59,10 @@ public class IdleState : StateBase
         {
             _player.ChangeState(new DodgeState(_player));
         }
+        if (context.action.name == "Item")
+        {
+            _player.ChangeState(new ItemState(_player));
+        }
         if (context.action.name == "Guard")
         {
             _player.ChangeState(new GuardState(_player));
@@ -139,6 +143,7 @@ public class DodgeState : StateBase
     // Dodge 상태 진입 시 호출
     public override void EnterState()
     {
+        PlayerStatManager.instance.SpendStamina(20);
         _player.Dodge();
         _player.PlayerCollider.SetActive(false);
         _player.Animator_Player.SetTrigger("Dodge");
@@ -165,6 +170,7 @@ public class ParryState : StateBase
 
     public override void EnterState()
     {
+        PlayerStatManager.instance.SpendStamina(20);
         _player.Animator_Player.SetTrigger("Parry");
         _player.Parry();
     }
@@ -193,6 +199,7 @@ public class GuardState : StateBase
 
     public override void EnterState()
     {
+        PlayerStatManager.instance.SpendStamina(20);
         _player.GuardPose.SetActive(true);
         _player.GuardEffect.Play();
         _player.Parry();
@@ -226,14 +233,20 @@ public class ItemState : StateBase
     // Item 상태 진입 시 호출
     public override void EnterState()
     {
-        _player.Animator_Player.SetTrigger("Use");
+        _player.Animator_Player.SetTrigger("Drink");
+        PlayerStatManager.instance.UsePotion();
+
+    }
+    public override void ExitState()
+    {
+        _player.Animator_Player.SetTrigger("Stop");
     }
 
-    // Item 상태 갱신 시 호출
-    public override void ExecuteOnUpdate()
+    public override void OnAnimationComplete(string animationName)
     {
-        
+            
             _player.ChangeState(new IdleState(_player));
+
     }
 }
 
@@ -257,6 +270,7 @@ public class Atk1State : StateBase
         _player.Atk1.Play();
         _player.BindInputCallback(true, OnInputCallback);
         _player.Atk1Collider.SetActive(true);
+        PlayerStatManager.instance.SpendStamina(10);
     }
 
     // Atk1 상태 종료 시 호출
@@ -313,6 +327,7 @@ public class Atk2State : StateBase
         _player.Atk2.Play();
         _player.Atk2Collider.SetActive(true);
         _player.BindInputCallback(true, OnInputCallback);
+        PlayerStatManager.instance.SpendStamina(10);
     }
 
     // Atk2 상태 종료 시 호출
@@ -363,6 +378,7 @@ public class Atk3State : StateBase
     // Atk3 상태 진입 시 호출
     public override void EnterState()
     {
+        PlayerStatManager.instance.SpendStamina(10);
         _player.Animator_Player.SetTrigger("Atk3");
         _player.Atk3.Play();
         _player.Atk4.Play();
@@ -400,6 +416,7 @@ public class Skill1State : StateBase
     public override void EnterState()
     {
         PlayerStatManager.instance.MinusCristal();
+        PlayerStatManager.instance.SpendStamina(30);
         _player.Jump();
         _player.Animator_Player.SetTrigger("Skill1");
         _player.Skill1Effect();

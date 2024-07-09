@@ -27,12 +27,16 @@ public class MonsterController : MonoBehaviour
     public GameObject MeleeAtk1Collider;
     public float playDuration = 5.0f; // 파티클이 재생될 시간
     public float BeforePlay = 2.0f;
+
+    public bool isPatternRunning = false;
     private void Start()
     {
         meleeRange = 5.0f;
         castRange = 10.0f;
 
         M_ChangeState(new M_IdleState(this));
+
+        
     }
     private void Update()
     {
@@ -48,16 +52,44 @@ public class MonsterController : MonoBehaviour
             //AttackMelee();
             _curmstate.M_Act("CastAtk1");
         }
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.R))
         {
-            _curmstate.M_Act("Look");
+            StartCoroutine(RandomPatternEveryHour());
         }
         if (Input.GetKeyDown(KeyCode.T))
         {
-            _curmstate.M_Act("Back");
+            StopCoroutine(RandomPatternEveryHour());
         }
 
+        if(MonsterStatManager.M_instance._hp<=0)
+        {
+            _curmstate.M_Act("Dead");
+        }
 
+    }
+    IEnumerator RandomPatternEveryHour()
+    {
+        while (true)
+        {
+
+            yield return new WaitForSeconds(5);
+            if (isPatternRunning)
+            {
+                continue;
+            }
+
+            // 랜덤으로 패턴 선택
+            int randomPattern = Random.Range(0, 2); // 0 또는 1
+
+            if (randomPattern == 0)
+            {
+                AttackMelee();
+            }
+            else
+            {
+                _curmstate.M_Act("CastAtk1");
+            }
+        }
     }
     public void M_ChangeState(M_State m_State)
     {

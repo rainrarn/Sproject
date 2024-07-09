@@ -13,6 +13,7 @@ TagManager:
   - Skill1_2
   - Bite
   - Breath
+  - Parry
   layers:
   - Default
   - TransparentFX

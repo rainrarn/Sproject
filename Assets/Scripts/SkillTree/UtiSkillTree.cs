@@ -199,6 +199,6 @@ public class UtiSkillTree : MonoBehaviour
 
     private void UpSkillLevel()
     {
-        PlayerStatManager.instance.UseSkillPoints();
+        PlayerStatManager.instance.UseUtillSkillPoints();
     }
 }

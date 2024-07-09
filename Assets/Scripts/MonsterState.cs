@@ -66,6 +66,10 @@ public class M_IdleState : M_StateBase
         {
             _monster.M_ChangeState(new M_BackState(_monster));
         }
+        else if (action == "Dead")
+        {
+            _monster.M_ChangeState(new M_DeadState(_monster));
+        }
     }
     
         
@@ -183,6 +187,7 @@ public class M_MeleeAtk1State : M_StateBase
     public override void M_ExitState()
     {
         _monster.MeleeAtk1Collider.SetActive(false);
+        _monster.isPatternRunning = false;
     }
     public override void M_OnAnimationComplete(string animationName)
     {
@@ -209,6 +214,7 @@ public class M_CastAtk1State : M_StateBase
     public override void M_ExitState()
     {
         _monster.EndBreath();
+        _monster.isPatternRunning = false;
     }
     public override void M_OnAnimationComplete(string animationName)
     {
@@ -216,4 +222,20 @@ public class M_CastAtk1State : M_StateBase
         _monster.M_ChangeState(new M_IdleState(_monster));
     }
 }
-
+public class M_DeadState : M_StateBase
+{
+    private readonly MonsterController _monster;
+    public M_DeadState(MonsterController monster)
+    {
+        _monster = monster;
+    }
+    public override void M_EnterState()
+    {
+        _monster.Animator_Monster.SetBool("Dead",true);
+        Time.timeScale = 0.2f;
+    }
+    public override void M_ExitState()
+    {
+        
+    }
+}

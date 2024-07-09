@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
+
 public class PlayerStatManager : MonoBehaviour
 {
     public static PlayerStatManager instance { get; private set; }
@@ -9,7 +11,7 @@ public class PlayerStatManager : MonoBehaviour
     public float _hp;
     public float _maxHp;
     public float _def;
-
+    public float _move;
     public float _stamina;
     public float _maxStamina;
     public float _stamonaRegenPerSecond = 5;
@@ -25,18 +27,29 @@ public class PlayerStatManager : MonoBehaviour
     public GameObject ManaCristal4;
     public GameObject ManaCristal5;
 
+    public TextMeshProUGUI atktext;
+    public TextMeshProUGUI deftext;
+    public TextMeshProUGUI statext;
+    public TextMeshProUGUI movetext;
+    public TextMeshProUGUI hptext;
+
     public float _atk;
     public float _critical;
     public int skillpoints;
 
     public int _healingpotion;
     public int _potionheal;
+
+    public Text potion;
+
     [SerializeField] Slider _hpBar;
     [SerializeField] Slider _staminaBar;
     [SerializeField] Slider _mpBar;
 
     [SerializeField] GameObject StatusInfo;
 
+    public ParticleSystem aura;
+    public bool isaura= false;
     private void Awake()
     {
         _maxHp = 100;
@@ -47,10 +60,12 @@ public class PlayerStatManager : MonoBehaviour
         _mp = 10;
         _def = 5;
 
+
         instance = this;
         _atk = 100;
         _critical = 0;
         skillpoints = 10;
+        _move = 1.0f;
 
         _hpBar.maxValue = _maxHp;
         _hpBar.value = _hp;
@@ -61,6 +76,7 @@ public class PlayerStatManager : MonoBehaviour
         _mpBar.maxValue = _maxMp;
         _mpBar.value = _mp;
         _healingpotion = 5;
+        _potionheal = 50;
 
         ManaCristal1.SetActive(false);
         ManaCristal2.SetActive(false);
@@ -85,7 +101,7 @@ public class PlayerStatManager : MonoBehaviour
                 {
                     _hp = _maxHp;
                 }
-            }  
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.U))
@@ -115,7 +131,24 @@ public class PlayerStatManager : MonoBehaviour
             StatusInfo.SetActive(false);
         }
 
-        
+        if(_stamina < _maxStamina)
+        {
+            _stamina += _stamonaRegenPerSecond * Time.deltaTime;
+        }
+
+        if(_cristalcount >=3&&isaura ==false)
+        {
+            aura.Play();
+            isaura = true;
+            _atk += 10;
+        }
+        else if( _cristalcount<3 &&isaura)
+        {
+            aura.Stop();
+            isaura = false;
+            _atk -= 10;
+        }
+
 
 
         _hpBar.value = _hp;
@@ -123,6 +156,14 @@ public class PlayerStatManager : MonoBehaviour
         _staminaBar.value = _stamina;
 
         GetManaCristal();
+
+        atktext.text = _atk.ToString();
+        deftext.text = _def.ToString();
+        statext.text = $"{_stamonaRegenPerSecond} /sec ";
+        movetext.text = _move.ToString();
+        hptext.text = $"{_hp}/{_maxHp}";
+
+        potion.text = _healingpotion.ToString();
     }
 
 
@@ -139,12 +180,22 @@ public class PlayerStatManager : MonoBehaviour
     {
         skillpoints++;
     }
-    public void UseSkillPoints()
+    public void UseAtkSkillPoints()
     {
         skillpoints--;
+        _atk+=5;
+    }
+    public void UseDefSkillPoints()
+    {
+        skillpoints--;
+        _def++;
+    }
+    public void UseUtillSkillPoints()
+    {
+        skillpoints--;
+        _stamonaRegenPerSecond++;
     }
 
-    
     public void GetManaCristal()
     {
         if(_mp>=_maxMp && _cristalcount < 5)
@@ -230,7 +281,10 @@ public class PlayerStatManager : MonoBehaviour
     {
         _mp += mp;
     }
-
+    public void SpendStamina(int stamina)
+    {
+        _stamina -= stamina;
+    }
     public void UsePotion()
     {
         if (_healingpotion > 0)

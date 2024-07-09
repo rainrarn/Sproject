@@ -16,7 +16,7 @@ public class HitManager : MonoBehaviour
             Debug.Log("1");
             PlayerStatManager.instance.GetMp(20);
             PlayerStatManager.instance.AtkMonster(1.0f);
-
+            
             // 충돌 위치에 이펙트 활성화
             Vector3 hitPoint = other.ClosestPoint(transform.position);
             GameObject hitEffect = EffectPullingManager.Instance.EffectPull(Atk);
@@ -36,7 +36,7 @@ public class HitManager : MonoBehaviour
             Debug.Log("2");
             PlayerStatManager.instance.GetMp(20);
             PlayerStatManager.instance.AtkMonster(1.5f);
-
+            
             // 충돌 위치에 이펙트 활성화
             Vector3 hitPoint = other.ClosestPoint(transform.position);
             GameObject hitEffect = EffectPullingManager.Instance.EffectPull(Atk);
@@ -56,7 +56,7 @@ public class HitManager : MonoBehaviour
             Debug.Log("3");
             PlayerStatManager.instance.GetMp(30);
             PlayerStatManager.instance.AtkMonster(2.0f);
-
+            
             // 충돌 위치에 이펙트 활성화
             Vector3 hitPoint = other.ClosestPoint(transform.position);
             GameObject hitEffect = EffectPullingManager.Instance.EffectPull(Atk);
@@ -75,7 +75,7 @@ public class HitManager : MonoBehaviour
         {
             Debug.Log("1");
             PlayerStatManager.instance.AtkMonster(2.0f);
-
+            
             // 충돌 위치에 이펙트 활성화
             Vector3 hitPoint = other.ClosestPoint(transform.position);
             GameObject hitEffect = EffectPullingManager.Instance.EffectPull(Skill1);

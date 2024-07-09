@@ -62,6 +62,9 @@ public class PlayerController : MonoBehaviour
     public GameObject Skill1_1obj;
     public GameObject Skill1_2obj;
 
+    public ParticleSystem PotionEffect;
+
+
     private bool stopParticles = false;
     public GameObject Atk1Collider;
     public GameObject Atk2Collider;
@@ -123,7 +126,10 @@ public class PlayerController : MonoBehaviour
             
         }
 
-
+        if (Input.GetKeyDown(KeyCode.E)&&PlayerStatManager.instance._hp<PlayerStatManager.instance._maxHp) 
+        {
+            UsingPotion();
+        }
     }
 
     public void ChangeState(IState newState)
@@ -389,5 +395,10 @@ public class PlayerController : MonoBehaviour
         EffectPullingManager.Instance.ReturnObject(effect);
 
 
+    }
+    private void UsingPotion()
+    {
+        PlayerStatManager.instance.UsePotion();
+        PotionEffect.Play();
     }
 }

@@ -200,6 +200,6 @@ public class AtkSkillTree : MonoBehaviour
 
     private void UpSkillLevel()
     {
-        PlayerStatManager.instance.UseSkillPoints();
+        PlayerStatManager.instance.UseAtkSkillPoints();
     }
 }

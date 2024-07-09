@@ -200,6 +200,6 @@ public class DefSkillTree : MonoBehaviour
 
     private void UpSkillLevel()
     {
-        PlayerStatManager.instance.UseSkillPoints();
+        PlayerStatManager.instance.UseDefSkillPoints();
     }
 }

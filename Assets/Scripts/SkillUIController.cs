@@ -20,7 +20,7 @@ public class SkillUIController : MonoBehaviour
 
     private void Update()
     {
-        // _skillpointstext.text = $"스킬 포인트 : {PlayerStatManager.instance.skillpoints}";
+        _skillpointstext.text = $"스킬 포인트 : {PlayerStatManager.instance.skillpoints}";
         if(Input.GetKeyDown(KeyCode.K))
         {
             if(SkillWindow.activeSelf)
