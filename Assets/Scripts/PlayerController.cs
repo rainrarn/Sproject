@@ -4,6 +4,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+
 public class PlayerController : MonoBehaviour
 {
     public Animator Animator_Player;
@@ -27,15 +28,14 @@ public class PlayerController : MonoBehaviour
     public bool LockCameraPosition = false;
     public float CameraRotationSpeed = 2.0f;
 
-    // Cinemachine
+    public Transform Monster; // 몬스터의 위치를 나타내는 Transform
+
     private float _cinemachineTargetYaw;
     private float _cinemachineTargetPitch;
 
-    // 플레이어
     private float _speed;
     private float _targetRotation = 0.0f;
     private float _rotationVelocity;
-    
 
     public float dodgeDistance = 20.0f; // 회피 시 전진하는 거리
     public float dodgeDuration = 0.5f; // 회피 시간
@@ -67,6 +67,12 @@ public class PlayerController : MonoBehaviour
     public GameObject PlayerCollider;
     public GameObject ParryCollider;
     public GameObject GuardCollider;
+    public bool islooked = false;
+
+    [SerializeField]
+    private Canvas _canvas;
+    [SerializeField]
+    private GameObject LookMark;
     private void Start()
     {
         ChangeState(new IdleState(this));
@@ -77,13 +83,29 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         _curState?.ExecuteOnUpdate();
-        //Move();
         CameraRotation();
         if(Input.GetKeyDown(KeyCode.X)) 
         {
             Jump();
         }
-        
+
+        if (Input.GetKeyDown(KeyCode.M)) // M 키를 눌렀을 때 몬스터 쪽으로 카메라 회전
+        {
+            if (islooked == false)
+            {
+                islooked = true;
+                LookMark.SetActive(true);
+            }
+            else
+            {
+                islooked = false;
+                LookMark.SetActive(false);
+            }
+        }
+        if (islooked)
+            RotateCameraTowardsMonster();
+
+        LookMark.transform.LookAt(transform);
     }
 
     public void ChangeState(IState newState)
@@ -206,6 +228,19 @@ public class PlayerController : MonoBehaviour
         _cinemachineTargetPitch = Mathf.Clamp(_cinemachineTargetPitch, BottomClamp, TopClamp);
 
         CinemachineCameraTarget.transform.rotation = Quaternion.Euler(_cinemachineTargetPitch + CameraAngleOverride, _cinemachineTargetYaw, 0.0f);
+    }
+
+    private void RotateCameraTowardsMonster()
+    {
+        if (Monster == null) return;
+
+        Vector3 directionToMonster = (Monster.position - transform.position).normalized;
+        float targetYaw = Mathf.Atan2(directionToMonster.x, directionToMonster.z) * Mathf.Rad2Deg;
+        
+        _cinemachineTargetYaw = targetYaw;
+        _cinemachineTargetPitch = 0.0f; // 필요에 따라 조정
+
+        CinemachineCameraTarget.transform.rotation = Quaternion.Euler(_cinemachineTargetPitch, _cinemachineTargetYaw, 0.0f);
     }
 
     public void Dodge()

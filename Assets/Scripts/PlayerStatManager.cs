@@ -24,7 +24,7 @@ public class PlayerStatManager : MonoBehaviour
     public GameObject ManaCristal4;
     public GameObject ManaCristal5;
 
-    public int _atk;
+    public float _atk;
     public float _critical;
     public int skillpoints;
 
@@ -46,7 +46,7 @@ public class PlayerStatManager : MonoBehaviour
         _mp = 10;
 
         instance = this;
-        _atk = 1;
+        _atk = 100;
         _critical = 0;
         skillpoints = 10;
 
@@ -143,7 +143,7 @@ public class PlayerStatManager : MonoBehaviour
         skillpoints--;
     }
 
- 
+    
     public void GetManaCristal()
     {
         if(_mp>=_maxMp && _cristalcount < 5)
@@ -234,5 +234,9 @@ public class PlayerStatManager : MonoBehaviour
         {
             _hp = _maxHp;
         }
+    }
+    public void AtkMonster()
+    {
+        MonsterStatManager.M_instance._hp -= _atk;
     }
 }

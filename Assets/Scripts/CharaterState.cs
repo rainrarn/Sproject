@@ -100,7 +100,7 @@ public class MoveState : StateBase
     public override void ExecuteOnUpdate()
     {
         Vector2 moveInput = _player.GetMoveInput(); // 이동 입력 받기
-        _player.Move(); // 이동 처리 (주석 처리됨)
+        _player.Move(); // 이동 처리
 
         if (moveInput == Vector2.zero) // 이동 입력이 없으면 Idle 상태로 전환
         {

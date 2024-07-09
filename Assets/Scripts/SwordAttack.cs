@@ -7,12 +7,14 @@ public class SwordAttack : MonoBehaviour
 {
     public string Hit; // 사용할 이펙트 태그
     public float effectDuration = 2.0f; // 이펙트가 유지될 시간
+
+    
     void OnTriggerEnter(Collider other)
     {
         if(other.CompareTag("Enemy"))
         {
-            
             Debug.Log("적중");
+            PlayerStatManager.instance.AtkMonster();
 
             // 충돌 위치에 이펙트 활성화
             Vector3 hitPoint = other.ClosestPoint(transform.position);
