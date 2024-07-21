@@ -232,7 +232,7 @@ public class M_DeadState : M_StateBase
     public override void M_EnterState()
     {
         _monster.Animator_Monster.SetBool("Dead",true);
-        Time.timeScale = 0.2f;
+        //Time.timeScale = 0.2f;
     }
     public override void M_ExitState()
     {

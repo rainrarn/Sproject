@@ -496,9 +496,9 @@ public class DeadState : StateBase
     public override void EnterState()
     {
         _player.Animator_Player.SetBool("Dead",true);
-        Time.timeScale = 0.2f;
-        _player.DeadCamera.SetActive(true);
-        _player.DeadCM.Priority = 100;
+        //Time.timeScale = 0.2f;
+        //_player.DeadCamera.SetActive(true);
+        //_player.DeadCM.Priority = 100;
     }
     public override void OnAnimationComplete(string animationName)
     {
