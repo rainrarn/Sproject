@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 using Cinemachine;
+using UnityEngine.SceneManagement;
 public class PlayerController : MonoBehaviour
 {
     public Animator Animator_Player;
@@ -400,5 +401,22 @@ public class PlayerController : MonoBehaviour
     {
         PlayerStatManager.instance.UsePotion();
         PotionEffect.Play();
+    }
+
+    public void DeathDelay()
+    {
+        StartCoroutine(DelayTime(5f));
+        ReStartScene();
+    }
+
+    private IEnumerator DelayTime(float time)
+    {
+        new WaitForSeconds(time);
+        yield return null;
+
+    }
+    private void ReStartScene()
+    {
+        SceneManager.LoadScene("Main");
     }
 }

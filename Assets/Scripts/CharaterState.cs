@@ -47,29 +47,29 @@ public class IdleState : StateBase
     // 입력 콜백 처리
     public override void OnInputCallback(InputAction.CallbackContext context)
     {
-        if (context.action.name == "Atk")
+        switch (context.action.name)
         {
-            _player.ChangeState(new Atk1State(_player));
-        }
-        if (context.action.name == "Move")
-        {
-            _player.ChangeState(new MoveState(_player));
-        }
-        if (context.action.name == "Dodge")
-        {
-            _player.ChangeState(new DodgeState(_player));
-        }
-        if (context.action.name == "Item")
-        {
-            _player.ChangeState(new ItemState(_player));
-        }
-        if (context.action.name == "Guard")
-        {
-            _player.ChangeState(new GuardState(_player));
-        }
-        if (context.action.name == "Skill1"&&PlayerStatManager.instance._cristalcount > 0)
-        {
-            _player.ChangeState(new Skill1State(_player));
+            case "Atk":
+                _player.ChangeState(new Atk1State(_player));
+                break;
+            case "Move":
+                _player.ChangeState(new MoveState(_player));
+                break;
+            case "Dodge":
+                _player.ChangeState(new DodgeState(_player));
+                break;
+            case "Item":
+                _player.ChangeState(new ItemState(_player));
+                break;
+            case "Guard":
+                _player.ChangeState(new GuardState(_player));
+                break;
+            case "Skill1":
+                if (PlayerStatManager.instance._cristalcount > 0)
+                {
+                    _player.ChangeState(new Skill1State(_player));
+                }
+                break;
         }
     }
 }
@@ -496,12 +496,15 @@ public class DeadState : StateBase
     public override void EnterState()
     {
         _player.Animator_Player.SetBool("Dead",true);
-        //Time.timeScale = 0.2f;
-        //_player.DeadCamera.SetActive(true);
-        //_player.DeadCM.Priority = 100;
+        _player.DeathDelay();
     }
     public override void OnAnimationComplete(string animationName)
     {
 
     }
+}
+
+enum StateName
+{
+
 }
