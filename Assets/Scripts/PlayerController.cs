@@ -154,7 +154,7 @@ public class PlayerController : MonoBehaviour
         {
             return;
         }
-        _curState?.ExitState();
+        _curState?.ExitState(); 
         _curState = newState;
         Text_TemporalState.text = _curState.ToString();
         _curState.EnterState();

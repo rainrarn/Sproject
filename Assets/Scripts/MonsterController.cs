@@ -52,6 +52,10 @@ public class MonsterController : MonoBehaviour
             //AttackMelee();
             _curmstate.M_Act("CastAtk1");
         }
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            _curmstate.M_Act("Look");
+        }
         if (Input.GetKeyDown(KeyCode.R))
         {
             StartCoroutine(RandomPatternEveryHour());
