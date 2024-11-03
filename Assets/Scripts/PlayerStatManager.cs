@@ -167,7 +167,10 @@ public class PlayerStatManager : MonoBehaviour
     }
 
 
-
+    public void PlayerHpUp(int def)
+    {
+        _def += def;
+    }
     public void PlayerAtkUp(int atk)
     {
         _atk += atk;
@@ -183,12 +186,11 @@ public class PlayerStatManager : MonoBehaviour
     public void UseAtkSkillPoints()
     {
         skillpoints--;
-        _atk+=5;
     }
     public void UseDefSkillPoints()
     {
         skillpoints--;
-        _def++;
+
     }
     public void UseUtillSkillPoints()
     {
@@ -298,7 +300,6 @@ public class PlayerStatManager : MonoBehaviour
             _hp = _maxHp;
         }
     }
-    
     public void AtkMonster(float m)
     {
         MonsterStatManager.M_instance._hp -= _atk*m;

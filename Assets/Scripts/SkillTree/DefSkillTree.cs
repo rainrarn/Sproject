@@ -52,7 +52,7 @@ public class DefSkillTree : MonoBehaviour
         if (isClickedA && PlayerStatManager.instance.skillpoints > 0 && isSkillAUP == false)
         {
             isSkillAUP = true;
-            //PlayerStatManager.instance.PlayerAtkUp(1);
+            PlayerStatManager.instance.PlayerHpUp(1);
             Color color = _skillA.GetComponent<Image>().color;
             _skillB.GetComponent<Image>().color = color;
             _skillC.GetComponent<Image>().color = color;
@@ -62,7 +62,7 @@ public class DefSkillTree : MonoBehaviour
         {
             DisableSkills();
             isClickedA = true;
-            _skillInfo.text = " skillA 설명 ";
+            _skillInfo.text = " 방어+1 ";
         }
     }
     public void OnClick_skillB()
@@ -71,6 +71,7 @@ public class DefSkillTree : MonoBehaviour
         {
             isSkillBUP = true;
             //PlayerStatManager.instance.PlayerCritical(10);
+            PlayerStatManager.instance.PlayerHpUp(5);
             Color color = _skillA.GetComponent<Image>().color;
             _skillD.GetComponent<Image>().color = color;
             _skillE.GetComponent<Image>().color = color;
@@ -80,7 +81,7 @@ public class DefSkillTree : MonoBehaviour
         {
             DisableSkills();
             isClickedB = true;
-            _skillInfo.text = " skillB 설명 ";
+            _skillInfo.text = " 방어+5 ";
         }
     }
     public void OnClick_skillC()
@@ -89,6 +90,7 @@ public class DefSkillTree : MonoBehaviour
         {
             isSkillCUP = true;
             //PlayerStatManager.instance.PlayerCritical(10);
+            PlayerStatManager.instance.PlayerHpUp(5);
             Color color = _skillA.GetComponent<Image>().color;
             _skillF.GetComponent<Image>().color = color;
             _skillG.GetComponent<Image>().color = color;
@@ -98,7 +100,7 @@ public class DefSkillTree : MonoBehaviour
         {
             DisableSkills();
             isClickedC = true;
-            _skillInfo.text = " skillC 설명 ";
+            _skillInfo.text = " 방어+5 ";
         }
     }
     public void OnClick_skillD()
@@ -107,6 +109,7 @@ public class DefSkillTree : MonoBehaviour
         {
             isSkillDUP = true;
             //PlayerStatManager.instance.PlayerCritical(10);
+            PlayerStatManager.instance.PlayerHpUp(10);
             Color color = _skillA.GetComponent<Image>().color;
             _skillH.GetComponent<Image>().color = color;
             UpSkillLevel();
@@ -115,7 +118,7 @@ public class DefSkillTree : MonoBehaviour
         {
             DisableSkills();
             isClickedD = true;
-            _skillInfo.text = " skillD 설명 ";
+            _skillInfo.text = " 방어+10 ";
         }
     }
     public void OnClick_skillE()
@@ -124,6 +127,7 @@ public class DefSkillTree : MonoBehaviour
         {
             isSkillEUP = true;
             //PlayerStatManager.instance.PlayerCritical(10);
+            PlayerStatManager.instance.PlayerHpUp(10);
             Color color = _skillA.GetComponent<Image>().color;
             _skillH.GetComponent<Image>().color = color;
             UpSkillLevel();
@@ -132,7 +136,7 @@ public class DefSkillTree : MonoBehaviour
         {
             DisableSkills();
             isClickedE = true;
-            _skillInfo.text = " skillE 설명 ";
+            _skillInfo.text = " 방어+10 ";
         }
     }
     public void OnClick_skillF()
@@ -141,6 +145,7 @@ public class DefSkillTree : MonoBehaviour
         {
             isSkillFUP = true;
             //PlayerStatManager.instance.PlayerCritical(10);
+            PlayerStatManager.instance.PlayerHpUp(10);
             Color color = _skillA.GetComponent<Image>().color;
             _skillH.GetComponent<Image>().color = color;
             UpSkillLevel();
@@ -149,7 +154,7 @@ public class DefSkillTree : MonoBehaviour
         {
             DisableSkills();
             isClickedF = true;
-            _skillInfo.text = " skillF 설명 ";
+            _skillInfo.text = " 방어+10 ";
         }
     }
     public void OnClick_skillG()
@@ -158,6 +163,7 @@ public class DefSkillTree : MonoBehaviour
         {
             isSkillGUP = true;
             //PlayerStatManager.instance.PlayerCritical(10);
+            PlayerStatManager.instance.PlayerHpUp(10);
             Color color = _skillA.GetComponent<Image>().color;
             _skillH.GetComponent<Image>().color = color;
             UpSkillLevel();
@@ -166,7 +172,7 @@ public class DefSkillTree : MonoBehaviour
         {
             DisableSkills();
             isClickedG = true;
-            _skillInfo.text = " skillG 설명 ";
+            _skillInfo.text = " 방어+10 ";
         }
     }
     public void OnClick_skillH()
@@ -175,13 +181,14 @@ public class DefSkillTree : MonoBehaviour
         {
             isSkillHUP = true;
             UpSkillLevel();
+            PlayerStatManager.instance.PlayerHpUp(20);
             //PlayerStatManager.instance.PlayerCritical(10);
         }
         else
         {
             DisableSkills();
             isClickedH = true;
-            _skillInfo.text = " skillH 설명 ";
+            _skillInfo.text = " 방어+20 ";
         }
     }
 
